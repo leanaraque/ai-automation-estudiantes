@@ -10,13 +10,14 @@ Antes de empezar necesitás tener hechas la [Guía 1](./01-preparar-cuentas.md) 
 flowchart LR
     A["1. Gmail<br/>Watch Emails"] --> F{"2. Filtro<br/>anti-bucle"}
     F --> B["3. Groq<br/>JSON Chat Completion"]
-    B --> R(("4. Router"))
-    R -- "Ruta 1: siempre" --> S["5. Slack<br/>Create a Message"]
-    R -- "Ruta 2: prioridad 5" --> W["6. Twilio<br/>Create a Message"]
+    B --> J["4. JSON<br/>Parse JSON"]
+    J --> R(("5. Router"))
+    R -- "Ruta 1: siempre" --> S["6. Slack<br/>Create a Message"]
+    R -- "Ruta 2: prioridad 5" --> W["7. Twilio<br/>Create a Message"]
 ```
 
 Lo que ya conocés de la Semana 3: Trigger, Router, Filtros, Error Handler, Run once.
-Lo nuevo de hoy: el trigger de Gmail, la IA devolviendo **varios datos**, y las salidas a Slack y WhatsApp.
+Lo nuevo de hoy: el trigger de Gmail, la IA devolviendo **varios datos** (y el módulo Parse JSON para leerlos), y las salidas a Slack y WhatsApp.
 
 Tiempo estimado: 45 minutos.
 
@@ -71,13 +72,29 @@ Antes de gastar una consulta de IA, frenamos los correos automáticos ("fuera de
    - Mensaje 2, **Role: User**: el texto con las variables de Gmail (en el mismo archivo).
 5. **Max tokens** (si el módulo lo muestra): `500`. Limita el largo de la respuesta y protege tu cuota.
 6. OK y renombrá el módulo: `IA: resumen y prioridad`.
-7. **Probá**: Run once (abajo a la izquierda). Abrí la burbuja de Groq: en la salida (Output) vas a ver `resumen`, `prioridad` y `telefono` como campos separados. Esa es la ventaja del módulo **JSON**: Make ya "abre la maleta" por vos.
+7. **Probá**: Run once (abajo a la izquierda). Abrí la burbuja de Groq: en el campo **Result** vas a ver el JSON con `resumen`, `prioridad` y `telefono`. Pero fijate que llega **como un solo texto**: es la maleta cerrada. Para usar cada dato por separado falta un paso más.
 
 > Si el Run once no trae nada, es porque el correo ya quedó marcado como leído. Marcalo como no leído en Gmail y volvé a probar.
 
-## Paso 5 — Router y Ruta 1: aviso al equipo en Slack
+## Paso 5 — Abrir la maleta: JSON > Parse JSON
 
-1. A la derecha de Groq: **+** > **Flow Control** > **Router**. Renombralo: `¿Qué canales?`.
+Groq devuelve el JSON como texto. Make no puede filtrar por `prioridad` ni arrastrar `telefono` mientras sigan adentro de ese texto. El módulo **Parse JSON** lo convierte en campos separados: es literalmente **abrir la maleta** que viste en las Semanas 2 y 4.
+
+1. A la derecha de Groq: **+** > buscá **JSON** > **Parse JSON**.
+2. **Data structure**: hacé clic en **Add** > nombre `Respuesta de la IA` > botón **Generate** > pegá este ejemplo y hacé clic en **Save**:
+
+```json
+{"resumen": "Landing para el sábado, presupuesto aprobado", "prioridad": 5, "telefono": "+5491122334455"}
+```
+
+   Make lee el ejemplo y arma el "molde": sabe que `resumen` y `telefono` son texto y que `prioridad` es un **número**. Eso es lo que después permite usar un operador numérico en el filtro.
+3. **JSON string**: arrastrá el campo **Result** del módulo de Groq.
+4. OK y renombrá el módulo: `Abrir la maleta`.
+5. **Probá**: Run once. Abrí la burbuja de Parse JSON: ahora `resumen`, `prioridad` y `telefono` aparecen como **campos separados**. Desde acá, todas las variables de la IA se toman de este módulo, no de Groq.
+
+## Paso 6 — Router y Ruta 1: aviso al equipo en Slack
+
+1. A la derecha de Parse JSON: **+** > **Flow Control** > **Router**. Renombralo: `¿Qué canales?`.
 2. Primera ruta: agregá **Slack** > **Create a Message**.
 3. **Connection**: Create a connection > Make te lleva a Slack > elegí el espacio `Agencia Norte` > **Permitir**.
 4. Configuración:
@@ -91,17 +108,18 @@ Prioridad: [prioridad]/5
 Ver el correo: https://mail.google.com/mail/u/0/#all/[Thread ID]
 ```
 
+   `resumen` y `prioridad` se arrastran del módulo **Parse JSON**; el nombre, el correo y el Thread ID, del módulo de Gmail.
 5. Esta ruta **no lleva filtro**: el equipo se entera de todas las consultas.
 6. Renombrá el módulo: `Avisar al equipo`.
 7. **Probá**: Run once (con el correo marcado como no leído). Tiene que aparecer el mensaje en `#leads`.
 
-## Paso 6 — Ruta 2: WhatsApp al cliente (solo urgentes)
+## Paso 7 — Ruta 2: WhatsApp al cliente (solo urgentes)
 
 1. Clic en el Router > agregá una segunda ruta > **Twilio** > **Create a Message**.
 2. **Connection**: pegá tu **Account SID** y tu **Auth Token**.
 3. Configuración:
    - **From**: `whatsapp:+14155238886` (el número del sandbox, con el prefijo `whatsapp:`).
-   - **To**: escribí `whatsapp:` y, pegado, arrastrá la variable `telefono` de Groq. Queda: `whatsapp:[telefono]`.
+   - **To**: escribí `whatsapp:` y, pegado, arrastrá la variable `telefono` de **Parse JSON**. Queda: `whatsapp:[telefono]`.
    - **Body**:
 
 ```
@@ -118,15 +136,15 @@ La línea `(Mensaje automático)` no es un detalle: en la Semana 1 viste que el 
 Clic en la llave inglesa de la línea entre el Router y Twilio > **Set up a filter**:
 
 - **Label**: `Urgente con teléfono`
-- Condición 1: `prioridad` > **Numeric operators: Equal to** > `5`
-- **Add AND rule**. Condición 2: `telefono` > **Text operators: Starts with** > `+`
+- Condición 1: `prioridad` (de Parse JSON) > **Numeric operators: Equal to** > `5`
+- **Add AND rule**. Condición 2: `telefono` (de Parse JSON) > **Text operators: Starts with** > `+`
 
 Dos detalles, los mismos de las Semanas 3 y 4:
 
-- `prioridad` es un **número**: usá un operador **numérico**. Comparar un número con un operador de texto es la trampa de tipos de datos que ya viste.
+- `prioridad` es un **número** (así lo definió el molde de Parse JSON): usá un operador **numérico**. Comparar un número con un operador de texto es la trampa de tipos de datos que ya viste.
 - La condición del `+` asegura que haya un teléfono en **formato internacional**. Si el correo no traía teléfono, `telefono` viene vacío y la ruta no se activa.
 
-## Paso 7 — Blindaje: Error Handler en la IA
+## Paso 8 — Blindaje: Error Handler en la IA
 
 Igual que en la Semana 3, protegemos el módulo más frágil: la llamada a la IA.
 
@@ -134,7 +152,7 @@ Igual que en la Semana 3, protegemos el módulo más frágil: la llamada a la IA
 2. **Number of attempts**: `3`. **Interval between attempts**: `1` minuto.
 3. Si Make te avisa que hay que permitir guardar ejecuciones incompletas, aceptá (o activalo en **Scenario settings** > **Allow storing of incomplete executions**).
 
-## Paso 8 — La prueba completa
+## Paso 9 — La prueba completa
 
 Marcá como no leídos los correos de la etiqueta y enviá los tres de prueba. Cambiá **Maximum number of results** del trigger a `3` y hacé **Run once**:
 
@@ -146,7 +164,7 @@ Marcá como no leídos los correos de la etiqueta y enviá los tres de prueba. C
 
 Si cada correo recorrió solo su camino, tu lógica está bien. Esta es la evidencia que vas a capturar para la pre-entrega (Guía 4).
 
-## Paso 9 — Guardar
+## Paso 10 — Guardar
 
 Clic en el ícono de guardar (abajo). Nombre del escenario: `Agencia Norte - Consultas multicanal`.
 
@@ -160,7 +178,9 @@ Clic en el ícono de guardar (abajo). Nombre del escenario: `Agencia Norte - Con
 | Groq da error de autenticación (401) | API key mal copiada | Creá una conexión nueva con la clave completa |
 | Groq responde pero sin los tres campos | El prompt del System no se pegó completo | Volvé a pegarlo; tiene que decir "SOLO con un objeto JSON" |
 | Slack da `not_in_channel` | La app de Make no está en el canal | En Slack, entrá a `#leads` y escribí `/invite @Make` |
-| Twilio da error 21211 (número inválido) | Al número le falta el `+` o tiene espacios | Mirá la salida de Groq: `telefono` tiene que verse como `+5491122334455` |
+| Twilio da error 21211 (número inválido) | Al número le falta el `+` o tiene espacios | Mirá la salida de Parse JSON: `telefono` tiene que verse como `+5491122334455` |
+| No aparecen `resumen`, `prioridad` ni `telefono` para arrastrar | Falta el módulo Parse JSON, o su JSON string no está conectado al Result de Groq | Revisá el Paso 5 y hacé un Run once para que Make "vea" los campos |
+| Parse JSON da error | La IA respondió algo que no es JSON | Revisá que el prompt del System esté completo ("SOLO con un objeto JSON") |
 | Twilio da error 63015 | Ese número no se unió al sandbox | Enviá `join ...` desde ese celular (Guía 1, Parte C) |
 | Twilio da error 21606, 21659 o 21910 | Falta el prefijo `whatsapp:` en From o en To | From tiene que ser exactamente `whatsapp:+14155238886` y To tiene que empezar con `whatsapp:` |
 | El WhatsApp no llega y no hay error | Pasaron más de 3 días desde tu `join` | Volvé a enviar el `join` al sandbox |

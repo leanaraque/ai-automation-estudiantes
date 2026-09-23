@@ -50,10 +50,12 @@ Para el correo urgente de prueba, la respuesta se ve así:
 
 Es la misma "maleta de datos" (JSON) que viste en las Semanas 2 y 4: claves y valores. La diferencia con la Semana 3 es que ahora la IA no responde una sola palabra, sino **tres datos**, y cada uno va a un lugar distinto:
 
+Pero ojo: Groq entrega ese JSON **como un solo texto** (en el campo **Result**). Es la maleta cerrada. Para usar cada dato por separado, en Make se agrega después de Groq el módulo **JSON > Parse JSON**, que abre la maleta y deja `resumen`, `prioridad` y `telefono` como campos (Guía 3, Paso 5). De ahí salen hacia su destino:
+
 | Clave | A dónde va |
 |---|---|
 | `resumen` | Al mensaje de Slack, para que el equipo entienda el pedido sin abrir el correo. |
 | `prioridad` | Al filtro del Router: decide si también se envía el WhatsApp. |
 | `telefono` | Al destinatario del WhatsApp. |
 
-Fijate que `prioridad` es un **número** (va sin comillas) y `telefono` es **texto** (va entre comillas). Eso importa al configurar el filtro.
+Fijate que `prioridad` es un **número** (va sin comillas) y `telefono` es **texto** (va entre comillas). Parse JSON respeta esos tipos, y eso importa al configurar el filtro.

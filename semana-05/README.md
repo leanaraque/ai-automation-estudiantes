@@ -5,9 +5,9 @@
 Un escenario en **Make** que atiende las consultas que le llegan por correo a Agencia Norte:
 
 ```
-Llega un correo  ->  La IA lo lee  ->  Aviso al equipo en Slack (siempre)
-   (Gmail)          (Groq: resumen,     +
-                     prioridad,         WhatsApp al cliente (solo si es urgente)
+Llega un correo  ->  La IA lo lee  ->  Se abre la respuesta  ->  Aviso al equipo en Slack (siempre)
+   (Gmail)          (Groq: resumen,     (Parse JSON)              +
+                     prioridad,                                   WhatsApp al cliente (solo si es urgente)
                      teléfono)
 ```
 
@@ -16,12 +16,13 @@ flowchart LR
     A["Gmail<br/>llega una consulta"] --> F{"¿Es un correo<br/>automático?"}
     F -- "No" --> B["Groq<br/>resumen + prioridad + teléfono"]
     F -- "Sí" --> X["Se descarta"]
-    B --> R(("Router"))
+    B --> J["Parse JSON<br/>abre la respuesta en campos"]
+    J --> R(("Router"))
     R -- "Siempre" --> S["Slack<br/>aviso al equipo en #leads"]
     R -- "Prioridad 5<br/>y hay teléfono" --> W["WhatsApp (Twilio)<br/>mensaje al cliente"]
 ```
 
-Es la misma forma que el flujo de la Semana 3 (Trigger, IA, Router, dos salidas). Lo nuevo es **por dónde entra** la información (Gmail) y **por dónde sale** (Slack y WhatsApp).
+Es la misma forma que el flujo de la Semana 3 (Trigger, IA, Router, dos salidas). Lo nuevo es **por dónde entra** la información (Gmail), **cómo leemos** la respuesta de la IA cuando trae varios datos (Parse JSON) y **por dónde sale** (Slack y WhatsApp).
 
 ## Por qué volvemos a Make
 
@@ -29,7 +30,7 @@ La Pre-entrega 5 pide el **blueprint de Make**. Make tiene módulos listos para 
 
 ## Por qué usamos Groq y no OpenAI
 
-El material menciona OpenAI. En clase usamos **Groq**: se configura en dos minutos, tiene un plan gratuito para practicar y Make tiene un módulo que devuelve la respuesta de la IA ya ordenada en campos. La lógica es exactamente la misma: un modelo de lenguaje que lee el correo y responde con un formato fijo.
+El material menciona OpenAI. En clase usamos **Groq**: se configura en dos minutos, tiene un plan gratuito para practicar y Make tiene un módulo listo para conectarlo. La lógica es exactamente la misma: un modelo de lenguaje que lee el correo y responde con un formato fijo.
 
 ## Guías (en este orden)
 
@@ -55,4 +56,5 @@ Material de apoyo:
 | Sandbox | Un entorno de prueba gratuito: como un simulador de vuelo antes de pilotar el avión real. |
 | Ventana de 24 horas | Podés escribirle libremente a alguien por WhatsApp durante las 24 horas siguientes a su último mensaje. Después, solo con una plantilla aprobada por Meta. |
 | OAuth2 | La forma de darle permiso a Make para usar tu Gmail sin entregarle tu contraseña. |
+| Parse JSON | El módulo de Make que "abre la maleta": convierte el JSON que devuelve la IA (un texto) en campos separados que se pueden filtrar y arrastrar. |
 | Formato internacional | Los números de WhatsApp van con `+`, código de país y sin espacios: `+5491122334455`. |

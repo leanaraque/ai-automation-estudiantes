@@ -58,7 +58,7 @@ El escenario que construimos en clase ([Guía 3](./03-construir-escenario.md)) c
 
 | La consigna pide | En nuestro escenario |
 |---|---|
-| Un trigger en Gmail conectado a un análisis de IA que clasifique la prioridad | `Consulta entrante` (Gmail) + `IA: resumen y prioridad` (Groq) |
+| Un trigger en Gmail conectado a un análisis de IA que clasifique la prioridad | `Consulta entrante` (Gmail) + `IA: resumen y prioridad` (Groq) + `Abrir la maleta` (Parse JSON) |
 | Un Router que derive al canal de acción inmediata cuando la prioridad es máxima | `¿Qué canales?` + filtro `Urgente con teléfono` (prioridad = 5) |
 | Salida a Slack con resumen al equipo | `Avisar al equipo` (canal `#leads`) |
 | Salida a WhatsApp API con mensaje dinámico en formato internacional | `WhatsApp urgente` (Twilio, `whatsapp:+549...`) |
@@ -67,7 +67,7 @@ Si querés, podés adaptar el prompt al contexto de la clínica. La estructura d
 
 ### Paso 1 — La captura del Run once
 
-1. Enviá los tres correos de prueba y hacé **Run once** (Guía 3, Paso 8).
+1. Enviá los tres correos de prueba y hacé **Run once** (Guía 3, Paso 9).
 2. Entrá a la pestaña **History** del escenario y abrí la ejecución.
 3. Sacá una captura donde se vea el recorrido: qué módulos se ejecutaron (con sus burbujas) y cuáles no.
 
@@ -96,5 +96,5 @@ El blueprint **no incluye** tus claves: las conexiones quedan guardadas en tu cu
 - [ ] Un solo enlace público (Google Doc o Notion), probado en incógnito.
 - [ ] Parte 1: tabla con los 5 escenarios, justificación, descarte de los otros dos canales y al menos 3 conceptos técnicos.
 - [ ] Parte 2: JSON del blueprint pegado como texto.
-- [ ] Parte 2: captura del Run once mostrando Gmail, IA, Router, Slack y WhatsApp con sus filtros.
+- [ ] Parte 2: captura del Run once mostrando Gmail, IA, Parse JSON, Router, Slack y WhatsApp con sus filtros.
 - [ ] Ninguna clave visible en el documento ni en las capturas.
