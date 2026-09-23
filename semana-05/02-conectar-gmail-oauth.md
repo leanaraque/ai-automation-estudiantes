@@ -17,6 +17,8 @@ flowchart LR
     U -- "3. Autorizás" --> G
     G -- "4. Le entrega un token<br/>(permiso limitado)" --> M
     M -- "5. Usa el token,<br/>nunca tu contraseña" --> GM["Tu Gmail"]
+    M -.- S["SCOPES: el token solo sirve<br/>para lo que aceptaste"]
+    M -.- R["REVOCABLE: lo anulás desde<br/>tu cuenta de Google"]
 ```
 
 - **Token**: el permiso que recibe Make. No es tu contraseña.
