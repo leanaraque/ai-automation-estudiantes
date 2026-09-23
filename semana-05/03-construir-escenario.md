@@ -2,7 +2,7 @@
 
 Vamos a armar, módulo por módulo, el escenario que vimos en clase. La regla es la misma de la Semana 3: **probar después de cada paso**. Si algo falla, sabés exactamente dónde.
 
-Antes de empezar necesitás tener hechas la [Guía 1](./01-preparar-cuentas.md) (Slack, Groq, Twilio) y la [Guía 2](./02-conectar-gmail-oauth.md) (cliente OAuth de Google).
+Antes de empezar necesitás tener hechas la [Guía 1](./01-preparar-cuentas.md) (Slack, Groq, Twilio) y leída la [Guía 2](./02-conectar-gmail-oauth.md) (qué es OAuth2 y cómo se conecta Gmail).
 
 ## El mapa
 
@@ -38,7 +38,7 @@ No queremos que la automatización lea **todo** tu correo personal. Vamos a sepa
 
 1. En Make: **Scenarios** > **Create a new scenario**.
 2. Clic en el **+** grande, buscá **Gmail** y elegí **Watch Emails**.
-3. **Connection**: creá la conexión con tu Client ID y Client Secret (Guía 2, Paso 6).
+3. **Connection**: **Create a connection** > nombre `Gmail Agencia Norte` > **Sign in with Google** > elegí tu cuenta y aceptá los permisos (Guía 2).
 4. Configuración:
    - **Filter type**: Simple filter.
    - **Folder / Label**: `Agencia Norte`.

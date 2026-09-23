@@ -36,7 +36,7 @@ El material menciona OpenAI. En clase usamos **Groq**: se configura en dos minut
 | # | Guía | Para qué |
 |---|---|---|
 | 1 | [Preparar las cuentas](./01-preparar-cuentas.md) | Slack, Groq y el sandbox de WhatsApp en Twilio |
-| 2 | [Conectar Gmail con OAuth2](./02-conectar-gmail-oauth.md) | El paso extra que pide Google para cuentas @gmail.com |
+| 2 | [Conectar Gmail con OAuth2](./02-conectar-gmail-oauth.md) | Qué pasa cuando hacés clic en "Sign in with Google" |
 | 3 | [Construir el escenario](./03-construir-escenario.md) | El flujo completo en Make, módulo por módulo |
 | 4 | [Tu Pre-entrega 5](./04-pre-entrega-5.md) | Qué entregar y cómo exportar la evidencia |
 
