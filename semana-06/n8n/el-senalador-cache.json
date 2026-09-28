@@ -1,11 +1,43 @@
 {
-  "name": "Agencia Norte - 2 Enviar el lote",
+  "name": "Agencia Norte - El señalador (caché)",
   "nodes": [
     {
+      "parameters": {
+        "content": "## El señalador (caché), funcionando\nOpcional: no se entrega. Es la idea de la clase, con la API de Claude de verdad.\n\n**Antes de ejecutar:** abrí el nodo 3 y en **Credential for Anthropic** creá una credencial con tu clave de la API (Guía 5, paso 2).\n\n**Para probar:** botón **Execute workflow** (abajo) y abrí el nodo 4.",
+        "height": 560,
+        "width": 260,
+        "color": 7
+      },
+      "id": "84917ef1-1c2e-4564-806a-7936f3396ddb",
+      "name": "Nota -300-0",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        0
+      ]
+    },
+    {
       "parameters": {},
-      "id": "23052571-a34a-4085-ab7d-4eedc7b6482b",
+      "id": "391647bf-54d3-4ac7-9f84-06ec7e967736",
       "name": "Probar flujo",
       "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### El manual\nLa parte fija de la Guía 1: rol, catálogo, reglas, ejemplos y formato. Es igual en todas las consultas.\n\nSi cambiás una sola palabra, para Claude es otro manual.",
+        "height": 560,
+        "width": 240,
+        "color": 5
+      },
+      "id": "a8170e7a-30d0-4e7f-aaac-f9e8dd982f2b",
+      "name": "Nota 0-0",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         0,
@@ -17,7 +49,7 @@
         "assignments": {
           "assignments": [
             {
-              "id": "af5cdae0-95b6-45b6-b4b7-24046f766e67",
+              "id": "511db2f5-80e2-46dc-904c-0c433b1808e8",
               "name": "parte_fija",
               "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
               "type": "string"
@@ -26,53 +58,66 @@
         },
         "options": {}
       },
-      "id": "6ed3b8d6-b0dc-4108-8724-9a705abca15a",
-      "name": "El manual (parte fija)",
+      "id": "d85f27c8-bd1d-436a-adf8-584d5391c6df",
+      "name": "1. El manual (parte fija)",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        0
-      ],
-      "notes": "La parte fija de la plantilla: rol, catálogo, reglas, ejemplos y formato. Es igual en todas las consultas.",
-      "notesInFlow": true
+        60,
+        440
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Tres consultas de ejemplo de Agencia Norte (la parte variable).\nreturn [\n  { json: {\n    remitente: 'Martina Sosa <martina.sosa@ejemplo.com>',\n    fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina'\n  } },\n  { json: {\n    remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>',\n    fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra'\n  } },\n  { json: {\n    remitente: 'Rodrigo Díaz <rodrigo.diaz@ejemplo.com>',\n    fecha: 'miércoles 23/09/2026 10:15',\n    consulta: 'Hola. Tenemos una inmobiliaria y queremos hacer anuncios en Google para vender más departamentos este trimestre. Podríamos invertir unos 500 dólares por mes. ¿Cómo trabajan?\\n\\nRodrigo Díaz'\n  } }\n];"
+        "content": "### El correo del día\nLa parte variable: el correo de Martina y el de Julián. Cambia en cada consulta.",
+        "height": 560,
+        "width": 240,
+        "color": 5
       },
-      "id": "d44ce151-8708-4d30-a175-31ac263a561e",
-      "name": "Consultas del mes (muestra)",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "id": "d1984d1a-3a80-4742-a29f-12601c4666e0",
+      "name": "Nota 260-0",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
       "position": [
-        440,
+        260,
         0
-      ],
-      "notes": "La parte variable: un correo por consulta.",
-      "notesInFlow": true
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Arma el paquete del lote: una solicitud por consulta, con un custom_id para reconocerla.\n// El manual lleva el señalador con ttl de 1 hora: el lote puede tardar más de 5 minutos.\nconst manual = $('El manual (parte fija)').first().json.parte_fija;\nconst requests = $input.all().map((item, i) => ({\n  custom_id: 'consulta-' + (i + 1),\n  params: {\n    model: 'claude-sonnet-5',\n    max_tokens: 1024,\n    thinking: { type: 'disabled' },\n    system: [{ type: 'text', text: manual, cache_control: { type: 'ephemeral', ttl: '1h' } }],\n    messages: [{\n      role: 'user',\n      content: 'Remitente: ' + item.json.remitente + '\\nFecha: ' + item.json.fecha + '\\nConsulta:\\n' + item.json.consulta\n    }]\n  }\n}));\nreturn [{ json: { paquete: { requests } } }];"
+        "jsCode": "// La parte variable: dos correos de Agencia Norte.\n// Son los mismos que probamos en el Playground en clase.\n// Cada \"json\" es una consulta; el nodo siguiente las manda de a una.\nreturn [\n  { json: {\n    quien: 'Martina Sosa',\n    remitente: 'Martina Sosa <martina.sosa@ejemplo.com>',\n    fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina'\n  } },\n  { json: {\n    quien: 'Julián Pereyra',\n    remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>',\n    fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra'\n  } }\n];"
       },
-      "id": "8f3f1e10-a0f9-47f7-9a54-e7dc133969ae",
-      "name": "Armar el paquete",
+      "id": "73b7d61e-8ed1-4823-8bc1-bb840c180904",
+      "name": "2. Las consultas (parte variable)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
+        320,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### El señalador\nLe habla a Claude directo, con un HTTP Request (Semana 4).\n\nEn el cuerpo (JSON):\n- `system` = el manual\n- `cache_control` = el señalador: guardar hasta acá\n- `messages` = el correo del día\n\nManda una consulta cada 5 segundos (Options > Batching), así la primera deja el manual sobre el escritorio antes de que llegue la segunda.",
+        "height": 560,
+        "width": 280,
+        "color": 6
+      },
+      "id": "8f2d9a8b-8bed-4878-a83e-a3d9148b6c51",
+      "name": "Nota 520-0",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
         0
-      ],
-      "notes": "Una solicitud por consulta, todas en un solo paquete.",
-      "notesInFlow": true
+      ]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.anthropic.com/v1/messages/batches",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -82,33 +127,54 @@
             }
           ]
         },
-        "options": {},
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json.paquete) }}"
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-5',\n  max_tokens: 1024,\n  thinking: { type: 'disabled' },\n  system: [{\n    type: 'text',\n    text: $('1. El manual (parte fija)').first().json.parte_fija,\n    cache_control: { type: 'ephemeral' }\n  }],\n  messages: [{\n    role: 'user',\n    content: 'Remitente: ' + $json.remitente + '\\nFecha: ' + $json.fecha + '\\nConsulta:\\n' + $json.consulta\n  }]\n}) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 5000
+            }
+          }
+        }
       },
-      "id": "27a168c4-eb9e-4680-bcc3-682b7c976699",
-      "name": "Enviar el lote (t0)",
+      "id": "8cb9e717-1487-4ab4-907c-5a6dcddea219",
+      "name": "3. Claude, con el señalador",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        880,
-        0
-      ],
-      "notes": "POST a la Message Batches API: 50% de descuento.",
-      "notesInFlow": true
+        600,
+        440
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// El recibo del envío: t0.\nconst r = $input.first().json;\nreturn [{ json: {\n  id_del_lote: r.id,\n  estado: r.processing_status,\n  enviado: r.created_at,\n  vence: r.expires_at,\n  mensaje: 'Lote enviado. Retiralo con el flujo 3 cuando el estado sea ended (hasta 24 horas; casi siempre, menos de 1 hora).'\n} }];"
+        "content": "### ¿Guardó o leyó?\nLee la factura de cada consulta.\n\n**Esperado:**\n- Martina: guardó unos 2.260 tokens\n- Julián: leyó unos 2.260 tokens\n\nAbrí este nodo y mirá la vista **Table**.",
+        "height": 560,
+        "width": 260,
+        "color": 4
       },
-      "id": "fff1b119-2e0e-45a2-a0fe-594b4e32fdd1",
-      "name": "El recibo",
+      "id": "df02147b-ae3e-4892-aa71-7fddc478104a",
+      "name": "Nota 820-0",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Claude devuelve, junto con la respuesta, un \"usage\": la factura de la consulta.\n// Ahí miramos dos números:\n//   cache_creation_input_tokens = tokens que se GUARDARON en el escritorio (caché)\n//   cache_read_input_tokens     = tokens que se LEYERON del escritorio (10 veces más barato)\nconst consultas = $('2. Las consultas (parte variable)').all();\n\nreturn $input.all().map((item, i) => {\n  const respuesta = item.json;\n  const factura = respuesta.usage || {};\n  const guardados = factura.cache_creation_input_tokens || 0;\n  const leidos = factura.cache_read_input_tokens || 0;\n\n  // La respuesta es el JSON de la Guía 1 escrito como texto: lo abrimos.\n  let datos = {};\n  try {\n    const texto = (respuesta.content || []).map(b => b.text || '').join('');\n    datos = JSON.parse(texto.replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = {};\n  }\n\n  let que_paso = 'No usó el caché: revisá que la parte fija no haya cambiado';\n  if (guardados > 0) que_paso = 'Dejó el manual sobre el escritorio (esta vez cuesta un poco más)';\n  if (leidos > 0) que_paso = 'Encontró el manual abierto: lo leyó 10 veces más barato';\n\n  return { json: {\n    consulta: consultas[i] ? consultas[i].json.quien : 'Consulta ' + (i + 1),\n    que_paso,\n    tokens_guardados_en_el_escritorio: guardados,\n    tokens_leidos_del_escritorio: leidos,\n    servicio: datos.servicio,\n    prioridad: datos.prioridad\n  } };\n});"
+      },
+      "id": "631ad725-fc41-44c2-8a43-3595b04bad82",
+      "name": "4. ¿Guardó o leyó?",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
-        0
+        880,
+        440
       ]
     }
   ],
@@ -117,51 +183,40 @@
       "main": [
         [
           {
-            "node": "El manual (parte fija)",
+            "node": "1. El manual (parte fija)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "El manual (parte fija)": {
+    "1. El manual (parte fija)": {
       "main": [
         [
           {
-            "node": "Consultas del mes (muestra)",
+            "node": "2. Las consultas (parte variable)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Consultas del mes (muestra)": {
+    "2. Las consultas (parte variable)": {
       "main": [
         [
           {
-            "node": "Armar el paquete",
+            "node": "3. Claude, con el señalador",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Armar el paquete": {
+    "3. Claude, con el señalador": {
       "main": [
         [
           {
-            "node": "Enviar el lote (t0)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Enviar el lote (t0)": {
-      "main": [
-        [
-          {
-            "node": "El recibo",
+            "node": "4. ¿Guardó o leyó?",
             "type": "main",
             "index": 0
           }
