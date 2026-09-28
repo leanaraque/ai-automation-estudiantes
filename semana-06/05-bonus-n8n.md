@@ -71,11 +71,13 @@ https://raw.githubusercontent.com/leanaraque/ai-automation-estudiantes/main/sema
 
 ## Paso 2 · Conectar tu clave de la API
 
-1. Creá la clave en [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) > **Create key**. Copiala: empieza con `sk-ant-` y se muestra **una sola vez**.
+1. Creá la clave en [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) > **Create key**. **Elegí un workspace** (por ejemplo, Default): una clave sin workspace no funciona en n8n. Copiala: empieza con `sk-ant-` y se muestra **una sola vez**.
 2. En n8n, doble clic en **Poner el manual sobre el escritorio** > **Credential for Anthropic** > **Create new credential** > pegá la clave en **API Key** > **Save**. n8n la prueba al guardarla: si da error, la clave está mal copiada.
 3. En los otros tres nodos HTTP Request (**Enviar el lote**, **Preguntar si terminó** y **Retirar las respuestas**), elegí esa misma credencial en **Credential for Anthropic**.
 
 n8n guarda los cambios solo, mientras editás.
+
+**Si al guardar la credencial aparece "Couldn't connect with these settings - Bad Request":** la clave no tiene workspace. Creá otra eligiendo un workspace. O, con la misma clave, activá **Add Custom Header** en la credencial: **Header Name** `anthropic-workspace-id` y **Header Value** el ID de tu workspace (empieza con `wrkspc_`; está en [platform.claude.com/settings/workspaces](https://platform.claude.com/settings/workspaces)).
 
 > La clave es como la tarjeta de crédito de la API: va solo en la credencial, nunca en un nodo ni en el chat.
 
