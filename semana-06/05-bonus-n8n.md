@@ -84,7 +84,7 @@ n8n guarda los cambios solo, mientras editás.
 ## Paso 3 · Probarlo
 
 1. Clic en **Execute workflow** (abajo, al centro). El flujo arranca por **Probar ahora**.
-2. Esperá. Con 3 consultas, el lote suele terminar en pocos minutos: vas a ver que el nodo **Esperar 1 minuto** se repite hasta que **¿Terminó?** sale por "sí".
+2. Esperá. El nodo **Esperar 1 minuto** se repite hasta que **¿Terminó?** sale por "sí". **Es normal que tarde varios minutos, aunque sean solo 3 consultas:** el lote entra en una fila con los de todos los clientes (el límite es 24 horas; casi siempre, menos de 1). Para ver que avanza, abrí **Preguntar si terminó**: `processing_status: in_progress` y `errored: 0` significan que está todo bien y solo hay que esperar. Es el precio del cupón lote: por eso sirve para el reporte del lunes y no para el WhatsApp a Martina.
 3. Doble clic en **El reporte y la factura** > vista **Table**.
 
 Lo que tenés que ver:
