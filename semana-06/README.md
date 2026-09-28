@@ -37,7 +37,7 @@ Las dos rebajas se pueden combinar, pero **no se suman**: se aplican una sobre l
 | 4 | [Tu Pre-entrega 6](./04-pre-entrega-6.md) | Las cuatro piezas del PDF, con el ejemplo de Agencia Norte resuelto |
 | 5 | [Opcional: el caché y el lote en n8n](./05-bonus-n8n.md) | No se entrega. Parte 1: los tokens antes y después del caché, en menos de un minuto. Parte 2: el reporte mensual para Paula como flujo real |
 
-Archivos de apoyo: [`calculadora-costos-claude.xlsx`](./calculadora-costos-claude.xlsx) y la carpeta [`n8n/`](./n8n) con los dos flujos opcionales de la Guía 5.
+Archivos de apoyo: [`ejemplo-pre-entrega-6.pdf`](./ejemplo-pre-entrega-6.pdf) (una entrega de ejemplo, resuelta con Agencia Norte), [`calculadora-costos-claude.xlsx`](./calculadora-costos-claude.xlsx) y la carpeta [`n8n/`](./n8n) con los dos flujos opcionales de la Guía 5.
 
 ## Conceptos clave
 

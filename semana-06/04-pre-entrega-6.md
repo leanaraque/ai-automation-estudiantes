@@ -1,6 +1,6 @@
 # Guía 4 — Tu Pre-entrega 6
 
-La consigna completa está en la plataforma. Esta guía la ordena y te muestra las cuatro piezas resueltas para Agencia Norte. **Tu PDF es sobre tu propio caso** (un proceso tuyo o de un cliente ficticio con muchas solicitudes que no son urgentes: reseñas, contratos, consultas, facturas).
+La consigna completa está en la plataforma. Esta guía la ordena y te muestra las cuatro piezas resueltas para Agencia Norte. **Para ver cómo queda armado, mirá el PDF de ejemplo: [`ejemplo-pre-entrega-6.pdf`](./ejemplo-pre-entrega-6.pdf).** **Tu PDF es sobre tu propio caso** (un proceso tuyo o de un cliente ficticio con muchas solicitudes que no son urgentes: reseñas, contratos, consultas, facturas).
 
 ## Qué se entrega
 
