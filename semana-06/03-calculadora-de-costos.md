@@ -15,8 +15,8 @@ También funciona en Excel, tal cual.
 
 | Zona | Qué es | ¿Se edita? |
 |---|---|---|
-| 1. Supuestos de tu caso (celdas **amarillas con texto azul**) | Cantidad de solicitudes, tokens de cada parte, precios del modelo, descuento de Batch | **Sí** |
-| 2. Tokens totales | Multiplicaciones a partir de tus supuestos | No |
+| 1. Supuestos de tu caso (celdas **amarillas con texto azul**, B4 a B15) | Cantidad de solicitudes, tokens de cada parte, precios del modelo, descuento de Batch y mínimo cacheable | **Sí** |
+| 2. Tokens totales y chequeo del caché (fila 20) | Multiplicaciones a partir de tus supuestos, y si tu parte fija supera el mínimo cacheable | No |
 | 3. Matriz de costos | Base, Solo Batch, Solo Caching, Caching + Batch | No |
 | 4. Ahorro del caché sobre el prefijo | El "hasta 90%" aplicado a tu caso | No |
 | Hoja **Precios** | Precios oficiales de Haiku 4.5, Sonnet 5 y Opus 5 | Solo para consultar |
@@ -26,10 +26,15 @@ También funciona en Excel, tal cual.
 1. **Cantidad de solicitudes**: cuántas veces se ejecuta tu plantilla (ej.: 500 reseñas, 200 contratos).
 2. **Tokens de la parte fija**: una estimación rápida es contar las palabras de tu parte fija y multiplicarlas por 2. Si tenés acceso al Playground de Claude, usá el número real que muestra.
 3. **Tokens de la parte variable** y **de salida**: mismo método.
-4. **Modelo**: elegí uno en la hoja **Precios** y copiá sus cinco precios en las celdas amarillas.
-5. Revisá la matriz: las cuatro filas tienen que tener sentido (Base es la más cara, Caching + Batch la más barata).
+4. **Modelo**: elegí uno en la hoja **Precios** y copiá sus cinco precios (B9 a B13) y su mínimo cacheable (B15).
+5. Mirá la **fila 20**: dice si tu parte fija supera el mínimo cacheable de tu modelo.
+6. Revisá la matriz: las cuatro filas tienen que tener sentido (Base es la más cara, Caching + Batch la más barata).
 
-> Chequeo importante: si tus tokens de la parte fija están **por debajo del mínimo cacheable** de tu modelo (hoja Precios), el caché no se activa. En ese caso, la fila de caching no aplica a tu caso: decilo en tu PDF. Es un análisis correcto, no un error.
+> Si la fila 20 dice **NO**, tu parte fija es más corta que el mínimo y el caché no se activa. La planilla ya lo tiene en cuenta: las filas con caché valen lo mismo que sin caché. En tu PDF, decilo. Es un análisis correcto, no un error.
+
+### Ejemplo: el mismo reporte con Haiku 4.5
+
+Cambiá B8 a `Claude Haiku 4.5`, B9 a `1`, B10 a `5`, B11 a `1,25`, B12 a `2`, B13 a `0,1` y B15 a `4096` (en Sheets en inglés, los decimales van con punto). La fila 20 dice **NO**: 1.500 tokens es menos que 4.096. La base baja a US$ 1,53 (Haiku es más barato), pero el caché no aporta nada.
 
 ## Qué copiar a tu PDF
 
