@@ -1,0 +1,176 @@
+{
+  "name": "Agencia Norte - 2 Enviar el lote",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "23052571-a34a-4085-ab7d-4eedc7b6482b",
+      "name": "Probar flujo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af5cdae0-95b6-45b6-b4b7-24046f766e67",
+              "name": "parte_fija",
+              "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6ed3b8d6-b0dc-4108-8724-9a705abca15a",
+      "name": "El manual (parte fija)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "La parte fija de la plantilla: rol, catálogo, reglas, ejemplos y formato. Es igual en todas las consultas.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tres consultas de ejemplo de Agencia Norte (la parte variable).\nreturn [\n  { json: {\n    remitente: 'Martina Sosa <martina.sosa@ejemplo.com>',\n    fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina'\n  } },\n  { json: {\n    remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>',\n    fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra'\n  } },\n  { json: {\n    remitente: 'Rodrigo Díaz <rodrigo.diaz@ejemplo.com>',\n    fecha: 'miércoles 23/09/2026 10:15',\n    consulta: 'Hola. Tenemos una inmobiliaria y queremos hacer anuncios en Google para vender más departamentos este trimestre. Podríamos invertir unos 500 dólares por mes. ¿Cómo trabajan?\\n\\nRodrigo Díaz'\n  } }\n];"
+      },
+      "id": "d44ce151-8708-4d30-a175-31ac263a561e",
+      "name": "Consultas del mes (muestra)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "notes": "La parte variable: un correo por consulta.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma el paquete del lote: una solicitud por consulta, con un custom_id para reconocerla.\n// El manual lleva el señalador con ttl de 1 hora: el lote puede tardar más de 5 minutos.\nconst manual = $('El manual (parte fija)').first().json.parte_fija;\nconst requests = $input.all().map((item, i) => ({\n  custom_id: 'consulta-' + (i + 1),\n  params: {\n    model: 'claude-sonnet-5',\n    max_tokens: 1024,\n    thinking: { type: 'disabled' },\n    system: [{ type: 'text', text: manual, cache_control: { type: 'ephemeral', ttl: '1h' } }],\n    messages: [{\n      role: 'user',\n      content: 'Remitente: ' + item.json.remitente + '\\nFecha: ' + item.json.fecha + '\\nConsulta:\\n' + item.json.consulta\n    }]\n  }\n}));\nreturn [{ json: { paquete: { requests } } }];"
+      },
+      "id": "8f3f1e10-a0f9-47f7-9a54-e7dc133969ae",
+      "name": "Armar el paquete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "notes": "Una solicitud por consulta, todas en un solo paquete.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages/batches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.paquete) }}"
+      },
+      "id": "27a168c4-eb9e-4680-bcc3-682b7c976699",
+      "name": "Enviar el lote (t0)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "notes": "POST a la Message Batches API: 50% de descuento.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// El recibo del envío: t0.\nconst r = $input.first().json;\nreturn [{ json: {\n  id_del_lote: r.id,\n  estado: r.processing_status,\n  enviado: r.created_at,\n  vence: r.expires_at,\n  mensaje: 'Lote enviado. Retiralo con el flujo 3 cuando el estado sea ended (hasta 24 horas; casi siempre, menos de 1 hora).'\n} }];"
+      },
+      "id": "fff1b119-2e0e-45a2-a0fe-594b4e32fdd1",
+      "name": "El recibo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Probar flujo": {
+      "main": [
+        [
+          {
+            "node": "El manual (parte fija)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "El manual (parte fija)": {
+      "main": [
+        [
+          {
+            "node": "Consultas del mes (muestra)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultas del mes (muestra)": {
+      "main": [
+        [
+          {
+            "node": "Armar el paquete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el paquete": {
+      "main": [
+        [
+          {
+            "node": "Enviar el lote (t0)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar el lote (t0)": {
+      "main": [
+        [
+          {
+            "node": "El recibo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

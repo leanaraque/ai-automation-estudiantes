@@ -122,7 +122,7 @@ flowchart LR
 
 Solo con Batch: **US$ 3,74 pasa a US$ 1,87**.
 
-> En n8n, un lote se arma con las piezas de la Semana 4: un trigger programado (viernes 22:00), un nodo **HTTP Request** que envía el lote a la API de Claude, y otro que después pregunta si terminó y descarga los resultados.
+> En n8n, un lote se arma con las piezas de la Semana 4: un trigger programado (viernes 22:00), un nodo **HTTP Request** que envía el lote a la API de Claude, y otro que después pregunta si terminó y descarga los resultados. Si querés verlo funcionando, en la [Guía 5 (bonus)](./05-bonus-n8n.md) tenés los flujos listos para importar.
 
 ---
 

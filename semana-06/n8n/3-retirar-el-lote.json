@@ -1,0 +1,217 @@
+{
+  "name": "Agencia Norte - 3 Retirar el lote",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "228f51ec-14e6-4bf8-b086-439f2118af69",
+      "name": "Probar flujo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.anthropic.com/v1/messages/batches?limit=1",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ceb8e47e-c8aa-4164-b7c6-67bd5df68100",
+      "name": "Buscar el último lote",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "GET: pregunta por el lote más reciente.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Toma el lote más reciente y muestra su estado.\nconst lote = ($input.first().json.data || [])[0] || {};\nreturn [{ json: {\n  id_del_lote: lote.id,\n  estado: lote.processing_status,\n  results_url: lote.results_url,\n  pedidos: lote.request_counts\n} }];"
+      },
+      "id": "d1bb3472-e242-4ee8-ae75-a9d2c8fbd791",
+      "name": "Estado del lote",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "08fd9cda-818c-46da-9e5b-009028245026",
+              "leftValue": "={{ $json.estado }}",
+              "rightValue": "ended",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ba3031ff-cfbe-4216-a9b3-b7d4900bf070",
+      "name": "¿Terminó?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.results_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "9a807f1e-70f7-4973-89c9-60b6acb23d0e",
+      "name": "Retirar los resultados (t1)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -100
+      ],
+      "notes": "Descarga las respuestas del lote (formato JSONL).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Los resultados vienen en formato JSONL: una línea por consulta.\n// Pueden llegar en cualquier orden: por eso cada una trae su custom_id.\n// Precios de lote de Claude Sonnet 5 por millón de tokens (la mitad de los normales):\n// entrada 1 · escritura en caché de 1 hora 2 · lectura de caché 0,10 · salida 5\nconst texto = $input.first().json.data || '';\nreturn texto.split('\\n').filter(l => l.trim()).map(l => {\n  const r = JSON.parse(l);\n  const m = (r.result && r.result.message) || {};\n  let datos = {};\n  try {\n    datos = JSON.parse((m.content || []).filter(b => b.type === 'text').map(b => b.text).join('')\n      .replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = {};\n  }\n  const u = m.usage || {};\n  const costo = ((u.input_tokens || 0) * 1 + (u.cache_creation_input_tokens || 0) * 2\n    + (u.cache_read_input_tokens || 0) * 0.1 + (u.output_tokens || 0) * 5) / 1000000;\n  return { json: {\n    custom_id: r.custom_id,\n    resultado: r.result ? r.result.type : 'sin resultado',\n    servicio: datos.servicio,\n    presupuesto_usd: datos.presupuesto_usd,\n    prioridad: datos.prioridad,\n    resumen: datos.resumen,\n    tokens_guardados_en_el_escritorio: u.cache_creation_input_tokens || 0,\n    tokens_leidos_del_escritorio: u.cache_read_input_tokens || 0,\n    tokens_del_correo: u.input_tokens || 0,\n    tokens_de_la_respuesta: u.output_tokens || 0,\n    costo_usd: Number(costo.toFixed(5))\n  } };\n});"
+      },
+      "id": "32b1186d-2b81-4828-a23a-222a22b43e00",
+      "name": "Leer las respuestas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: {\n  estado: $input.first().json.estado,\n  mensaje: 'Todavía no terminó. Volvé a ejecutar este flujo en unos minutos.'\n} }];"
+      },
+      "id": "dfc242a3-218a-4e6c-bfc0-2b79c4480ca1",
+      "name": "Todavía no",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "Probar flujo": {
+      "main": [
+        [
+          {
+            "node": "Buscar el último lote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar el último lote": {
+      "main": [
+        [
+          {
+            "node": "Estado del lote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado del lote": {
+      "main": [
+        [
+          {
+            "node": "¿Terminó?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Terminó?": {
+      "main": [
+        [
+          {
+            "node": "Retirar los resultados (t1)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Todavía no",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retirar los resultados (t1)": {
+      "main": [
+        [
+          {
+            "node": "Leer las respuestas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

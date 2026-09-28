@@ -1,0 +1,159 @@
+{
+  "name": "Agencia Norte - 1 El señalador (caché)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e0fead8d-b77f-418c-b8d7-919925f6d231",
+      "name": "Probar flujo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e2e86e0-f591-46b6-88ea-b19fa341394c",
+              "name": "parte_fija",
+              "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7a3cc118-9cab-4875-966e-8bbf4ba354bc",
+      "name": "El manual (parte fija)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "La parte fija de la plantilla: rol, catálogo, reglas, ejemplos y formato. Es igual en todas las consultas.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tres consultas de ejemplo de Agencia Norte (la parte variable).\nreturn [\n  { json: {\n    remitente: 'Martina Sosa <martina.sosa@ejemplo.com>',\n    fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina'\n  } },\n  { json: {\n    remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>',\n    fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra'\n  } },\n  { json: {\n    remitente: 'Rodrigo Díaz <rodrigo.diaz@ejemplo.com>',\n    fecha: 'miércoles 23/09/2026 10:15',\n    consulta: 'Hola. Tenemos una inmobiliaria y queremos hacer anuncios en Google para vender más departamentos este trimestre. Podríamos invertir unos 500 dólares por mes. ¿Cómo trabajan?\\n\\nRodrigo Díaz'\n  } }\n];"
+      },
+      "id": "0c79ac90-2bd6-4da3-98d2-66f5f85728ec",
+      "name": "Consultas del mes (muestra)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "notes": "La parte variable: un correo por consulta.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 5000
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-5',\n  max_tokens: 1024,\n  thinking: { type: 'disabled' },\n  system: [{\n    type: 'text',\n    text: $('El manual (parte fija)').first().json.parte_fija,\n    cache_control: { type: 'ephemeral' }\n  }],\n  messages: [{\n    role: 'user',\n    content: 'Remitente: ' + $json.remitente + '\\nFecha: ' + $json.fecha + '\\nConsulta:\\n' + $json.consulta\n  }]\n}) }}"
+      },
+      "id": "e8e29aaa-fdda-4622-b5e4-8df575bdcc43",
+      "name": "Claude, con el señalador",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "notes": "cache_control al final de la parte fija = el señalador. Manda las consultas de a una, cada 5 segundos.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lee la respuesta de Claude y la \"factura\" de cada consulta.\n// Precios de Claude Sonnet 5 por millón de tokens (verificados el 28/09/2026):\n// entrada 2 · escritura en caché 2,50 · lectura de caché 0,20 · salida 10\nconst consultas = $('Consultas del mes (muestra)').all();\nreturn $input.all().map((item, i) => {\n  const r = item.json;\n  const u = r.usage || {};\n  let datos = {};\n  try {\n    const texto = (r.content || []).filter(b => b.type === 'text').map(b => b.text).join('');\n    datos = JSON.parse(texto.replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = { servicio: 'La respuesta no vino como JSON' };\n  }\n  const entrada = u.input_tokens || 0;\n  const guardados = u.cache_creation_input_tokens || 0;\n  const leidos = u.cache_read_input_tokens || 0;\n  const salida = u.output_tokens || 0;\n  const costo = (entrada * 2 + guardados * 2.5 + leidos * 0.2 + salida * 10) / 1000000;\n  return { json: {\n    consulta: consultas[i] ? consultas[i].json.remitente : 'Consulta ' + (i + 1),\n    servicio: datos.servicio,\n    presupuesto_usd: datos.presupuesto_usd,\n    prioridad: datos.prioridad,\n    resumen: datos.resumen,\n    tokens_guardados_en_el_escritorio: guardados,\n    tokens_leidos_del_escritorio: leidos,\n    tokens_del_correo: entrada,\n    tokens_de_la_respuesta: salida,\n    costo_usd: Number(costo.toFixed(5)),\n  } };\n});"
+      },
+      "id": "fd77778f-50bd-4866-8f3c-3eba4f7c80c9",
+      "name": "Leer la factura",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "notes": "Mirá tokens_guardados_en_el_escritorio y tokens_leidos_del_escritorio.",
+      "notesInFlow": true
+    }
+  ],
+  "connections": {
+    "Probar flujo": {
+      "main": [
+        [
+          {
+            "node": "El manual (parte fija)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "El manual (parte fija)": {
+      "main": [
+        [
+          {
+            "node": "Consultas del mes (muestra)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultas del mes (muestra)": {
+      "main": [
+        [
+          {
+            "node": "Claude, con el señalador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude, con el señalador": {
+      "main": [
+        [
+          {
+            "node": "Leer la factura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

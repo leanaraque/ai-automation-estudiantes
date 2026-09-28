@@ -35,8 +35,9 @@ Las dos rebajas se pueden combinar, pero **no se suman**: se aplican una sobre l
 | 2 | [Caching y Batch](./02-caching-y-batch.md) | Cómo funciona cada descuento, con los precios oficiales y las cuentas hechas |
 | 3 | [La calculadora de costos](./03-calculadora-de-costos.md) | Una planilla que hace las cuentas por vos: la usás para tu pre-entrega |
 | 4 | [Tu Pre-entrega 6](./04-pre-entrega-6.md) | Las cuatro piezas del PDF, con el ejemplo de Agencia Norte resuelto |
+| 5 | [Bonus: el señalador y el lote en n8n](./05-bonus-n8n.md) | Opcional: tres flujos para importar que muestran el caché y el lote funcionando con la API de Claude |
 
-Archivo de apoyo: [`calculadora-costos-claude.xlsx`](./calculadora-costos-claude.xlsx).
+Archivos de apoyo: [`calculadora-costos-claude.xlsx`](./calculadora-costos-claude.xlsx) y la carpeta [`n8n/`](./n8n) con los flujos del bonus.
 
 ## Conceptos clave
 
