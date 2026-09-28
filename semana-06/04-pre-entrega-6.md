@@ -64,7 +64,7 @@ El `custom_id` sirve para saber a qué consulta corresponde cada resultado: los 
 
 ## Pieza 3 — El bloque de prefijo para `cache_control`
 
-El `cache_control` va en el **último bloque de la parte fija**. Le dice a la API: "desde el principio hasta acá, guardalo".
+En criollo: el **prefijo** es la parte fija (el manual), el **caché** es la memoria rápida de Claude (el escritorio) y `cache_control` es la marca "guardar hasta acá" (el señalador). La marca va en el **último bloque de la parte fija**: todo lo que está antes se guarda; lo que viene después cambia en cada consulta.
 
 ```json
 {

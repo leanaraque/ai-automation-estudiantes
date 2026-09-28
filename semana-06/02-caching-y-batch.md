@@ -56,6 +56,16 @@ Mirá la primera fila: **casi tres cuartos del costo es la parte fija**, que es 
 
 ## Prompt Caching: no pagar dos veces por leer lo mismo
 
+### Tres palabras, una sola idea: el manual sobre el escritorio
+
+| Palabra técnica | En criollo | En la analogía |
+|---|---|---|
+| **Prefijo** | La parte fija, al principio del prompt | El **manual**: las páginas que son iguales todos los días |
+| **Caché** | La memoria rápida de Claude | El **escritorio**: el manual queda abierto ahí y no hay que ir a buscarlo |
+| **`cache_control`** | La marca "guardar hasta acá" | El **señalador**: marca dónde termina el manual y empieza el correo del día |
+
+Sin caché, para cada consulta Claude "va a buscar el manual" y lo lee entero. Con caché, lo lee una vez y lo deja abierto sobre el escritorio: desde la segunda consulta, leerlo cuesta 10 veces menos.
+
 ```mermaid
 flowchart LR
     L1["Llamada 1<br/>el prefijo se ESCRIBE en el caché<br/>(1,25 veces el precio: un poco más caro)"] --> L2["Llamada 2<br/>CACHE HIT: el prefijo se LEE del caché<br/>(0,1 veces el precio: 10 veces más barato)"]
