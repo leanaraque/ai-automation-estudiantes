@@ -23,6 +23,7 @@ Semana a semana vamos a automatizar su proceso comercial, de punta a punta.
 | Semana | Tema | Carpeta |
 |---|---|---|
 | 5 | Ecosistema de comunicación: Gmail, Slack y WhatsApp API | [`semana-05`](./semana-05) |
+| 6 | Inteligencia de negocio con la API de Claude | [`semana-06`](./semana-06) |
 
 ## Reglas de oro para todo el curso
 
