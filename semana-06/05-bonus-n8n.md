@@ -1,6 +1,90 @@
-# Guía 5 (opcional) — El reporte mensual para Paula, en n8n
+# Guía 5 (opcional) — El caché y el lote, funcionando en n8n
 
-> **Opcional.** No se entrega ni suma a la nota: la Pre-entrega 6 es solo el PDF. Esta guía muestra cómo se ve en un flujo real lo que diseñamos en clase: el reporte de las consultas del mes, leído por Claude gastando lo mínimo.
+> **Opcional.** No se entrega ni suma a la nota: la Pre-entrega 6 es solo el PDF. Esta guía muestra con la API de Claude de verdad lo que diseñamos en clase.
+
+Tiene dos partes:
+
+| Parte | Qué ves | Cuánto tarda |
+|---|---|---|
+| **1. Antes y después del caché** | Los tokens de las mismas consultas sin el señalador y con el señalador | Menos de un minuto |
+| **2. El reporte mensual para Paula** | El problema de la clase como flujo real: Gmail, los dos cupones y el reporte por correo | Varios minutos (el lote hace esperar) |
+
+El caché no hace esperar: funciona con la API normal, que responde en segundos. El que hace esperar es el lote.
+
+## Antes de empezar
+
+- Una cuenta de **n8n Cloud** (la prueba gratuita dura 14 días).
+- Saldo en la consola de Claude: [platform.claude.com](https://platform.claude.com) > **Billing**. La API se paga aparte de la suscripción a Claude. Cada prueba cuesta alrededor de un centavo de dólar.
+- **Una clave de la API:** en [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) > **Create key**. **Elegí un workspace** (por ejemplo, Default): una clave sin workspace no funciona en n8n. Copiala: empieza con `sk-ant-` y se muestra **una sola vez**.
+
+> La clave es como la tarjeta de crédito de la API: va solo en la credencial de n8n, nunca en un nodo ni en el chat.
+
+Para importar cada flujo: en n8n, **Create** (arriba a la izquierda) > **Workflow** > tres puntos (arriba a la derecha) > **Import from URL** > pegá la dirección. Si preferís el archivo: abrilo en la carpeta [`n8n/`](./n8n) > **Download raw file** > en n8n, tres puntos > **Import from File**.
+
+---
+
+# Parte 1 · Antes y después del caché
+
+Las mismas 3 consultas (Martina, Julián y Rodrigo), dos veces:
+
+- **Antes:** sin señalador. Cada consulta paga el manual completo.
+- **Después:** con señalador (`cache_control`). La primera deja el manual sobre el escritorio; las otras lo leen 10 veces más barato.
+
+Entre las dos rondas **lo único que cambia es el señalador**. El manual, las consultas y el modelo son los mismos.
+
+```mermaid
+flowchart LR
+    T["Probar ahora"]:::ya --> M["El manual<br/>(parte fija de la Guía 1)"]:::ya --> C["Las consultas, dos veces<br/>3 para ANTES + 3 para DESPUÉS"]:::ya --> H["Claude · HTTP Request<br/>ANTES: sin señalador<br/>DESPUÉS: con cache_control"]:::nuevo --> R["Antes y después<br/>tokens y costo de cada consulta<br/>+ fila TOTAL"]:::ya
+
+    classDef ya fill:#171717,stroke:#171717,color:#F8F2E8
+    classDef nuevo fill:#FF632B,stroke:#FF632B,color:#F8F2E8
+```
+
+## Paso 1 · Importar y conectar
+
+1. Importá esta dirección:
+
+```
+https://raw.githubusercontent.com/leanaraque/ai-automation-estudiantes/main/semana-06/n8n/antes-y-despues-del-cache.json
+```
+
+2. Doble clic en el nodo **Claude** > **Credential for Anthropic** > **Create new credential** > pegá tu clave en **API Key** > **Save**. n8n la prueba al guardarla.
+
+**Si al guardar aparece "Couldn't connect with these settings - Bad Request":** la clave no tiene workspace. Creá otra eligiendo un workspace. O, con la misma clave, activá **Add Custom Header** en la credencial: **Header Name** `anthropic-workspace-id` y **Header Value** el ID de tu workspace (empieza con `wrkspc_`; está en [platform.claude.com/settings/workspaces](https://platform.claude.com/settings/workspaces)).
+
+## Paso 2 · Ejecutar y comparar
+
+1. Clic en **Execute workflow** (abajo, al centro). Tarda menos de un minuto: las 6 consultas salen de a una, cada 2 segundos.
+2. Doble clic en **Antes y después** > vista **Table**.
+
+Lo que tenés que ver (los números exactos pueden variar un poco):
+
+| consulta | antes | despues |
+|---|---|---|
+| Martina Sosa | 2.473 a precio completo | 212 a precio completo + 2.261 GUARDADOS en el escritorio (un poco más caros) |
+| Julián Pereyra | 2.403 a precio completo | 142 a precio completo + 2.261 LEÍDOS del escritorio (10 veces más baratos) |
+| Rodrigo Díaz | unos 2.410 a precio completo | unos 150 a precio completo + 2.261 LEÍDOS del escritorio (10 veces más baratos) |
+
+Los números de **antes** son los mismos que viste en el Playground en clase.
+
+Y en la fila **TOTAL**, la columna **en_palabras**:
+
+> Con 3 consultas, de cada 100 que pagabas antes, ahora pagás 62. Con 600 consultas pagarías unos 34: el cupón caché del ticket de 100.
+
+## Cómo leerlo
+
+- **Martina paga un poco más después que antes.** Es la primera: guarda el manual en el escritorio, y guardar cuesta 1,25 veces el precio normal.
+- **Julián y Rodrigo pagan unas tres veces menos.** El manual ya estaba abierto: lo leen al 10% del precio.
+- **Con 3 consultas el ahorro se ve chico** porque la primera, la más cara, pesa mucho. Con 600, se guarda una sola vez y las otras 599 lo leen: el ticket baja de 100 a 34, como en la clase.
+
+**Probá:**
+
+- **Ejecutalo otra vez enseguida.** En la ronda "después", las tres consultas leen del escritorio: el manual sigue guardado (dura 5 minutos y cada uso lo renueva).
+- **Cambiá una sola palabra del manual** (nodo **El manual**) y ejecutalo. Martina vuelve a guardar: para Claude es otro manual. Por eso la parte fija va primero y no cambia nunca.
+
+---
+
+# Parte 2 · El reporte mensual para Paula
 
 ## Por qué es un flujo nuevo y no el de la Semana 5
 
@@ -72,41 +156,26 @@ En negro, piezas que ya conocés. En naranja, las nuevas. En el lienzo de n8n ca
 
 ## Qué necesitás
 
-- Una cuenta de **n8n Cloud** (la prueba gratuita dura 14 días).
-- Tu Gmail con la etiqueta **Agencia Norte** y los [correos de prueba de la Semana 5](../semana-05/correos-de-prueba.md). El flujo busca los de los últimos 30 días; si son más viejos, reenviátelos y ponelos en la etiqueta.
-- Saldo en la consola de Claude: [platform.claude.com](https://platform.claude.com) > **Billing**. La API se paga aparte de la suscripción a Claude. Cada prueba cuesta alrededor de un centavo de dólar.
+Además de lo de "Antes de empezar": tu Gmail con la etiqueta **Agencia Norte** y los [correos de prueba de la Semana 5](../semana-05/correos-de-prueba.md). El flujo busca los de los últimos 30 días; si son más viejos, reenviátelos y ponelos en la etiqueta.
 
 ## Paso 1 · Importar el flujo
-
-1. En n8n: **Create** (arriba a la izquierda) > **Workflow**.
-2. Tres puntos (arriba a la derecha) > **Import from URL** y pegá:
 
 ```
 https://raw.githubusercontent.com/leanaraque/ai-automation-estudiantes/main/semana-06/n8n/el-reporte-mensual-para-paula.json
 ```
 
-   Si preferís el archivo: abrí [`n8n/el-reporte-mensual-para-paula.json`](./n8n/el-reporte-mensual-para-paula.json) > **Download raw file** > en n8n, tres puntos > **Import from File**.
-
 ## Paso 2 · Conectar las credenciales
 
-**Claude (4 nodos HTTP Request):**
-
-1. Creá la clave en [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) > **Create key**. **Elegí un workspace** (por ejemplo, Default): una clave sin workspace no funciona en n8n. Copiala: empieza con `sk-ant-` y se muestra **una sola vez**.
-2. Doble clic en **Poner el manual sobre el escritorio** > **Credential for Anthropic** > **Create new credential** > pegá la clave en **API Key** > **Save**. n8n la prueba al guardarla.
-3. En **Enviar el lote**, **Preguntar si terminó** y **Retirar las respuestas**, elegí esa misma credencial.
-
-**Si al guardar aparece "Couldn't connect with these settings - Bad Request":** la clave no tiene workspace. Creá otra eligiendo un workspace. O, con la misma clave, activá **Add Custom Header** en la credencial: **Header Name** `anthropic-workspace-id` y **Header Value** el ID de tu workspace (empieza con `wrkspc_`; está en [platform.claude.com/settings/workspaces](https://platform.claude.com/settings/workspaces)).
+**Claude (4 nodos HTTP Request):** en **Poner el manual sobre el escritorio**, **Enviar el lote**, **Preguntar si terminó** y **Retirar las respuestas**, elegí en **Credential for Anthropic** la credencial que creaste en la Parte 1.
 
 **Gmail (2 nodos):**
 
-4. Doble clic en **Las consultas del mes** > en la credencial, **Create new credential** > **Sign in with Google** > elegí tu cuenta y aceptá los permisos.
-5. En **Enviar el reporte a Paula**, elegí esa misma credencial y en **To** cambiá `tu.correo@ejemplo.com` por tu correo.
+1. Doble clic en **Las consultas del mes** > en la credencial, **Create new credential** > **Sign in with Google** > elegí tu cuenta y aceptá los permisos.
+2. En **Enviar el reporte a Paula**, elegí esa misma credencial y en **To** cambiá `tu.correo@ejemplo.com` por tu correo.
 
 Si tu etiqueta no se llama "Agencia Norte", cambiá la búsqueda en **Las consultas del mes** > **Filters** > **Search**: `label:agencia-norte` (en Gmail, los espacios de la etiqueta se escriben con guion).
 
 n8n guarda los cambios solo, mientras editás.
-
-> La clave es como la tarjeta de crédito de la API: va solo en la credencial, nunca en un nodo ni en el chat.
 
 ## Paso 3 · Probarlo
 

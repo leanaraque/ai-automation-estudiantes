@@ -1,0 +1,215 @@
+{
+  "name": "Agencia Norte - Antes y después del caché",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Antes y después del caché\nLas mismas 3 consultas, dos veces. Tarda menos de un minuto.\n\n**Antes:** sin señalador. **Después:** con señalador.\nLo único que cambia es `cache_control` en el nodo **Claude**.\n\nAntes de probar: credencial de Anthropic en el nodo Claude (Guía 5). Después: **Execute workflow** y abrí **Antes y después** en vista Table.",
+        "height": 640,
+        "width": 420,
+        "color": 7
+      },
+      "id": "633ac226-8d75-4c1f-8266-1dc566312cd3",
+      "name": "Nota -560 -20",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -20
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "48b3d1db-5190-4225-a4c8-6c03f046e84a",
+      "name": "Probar ahora",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## El manual y las consultas\nEl manual: la parte fija de la Guía 1.\n\nLas consultas de Martina, Julián y Rodrigo, dos veces: tres para la ronda **antes** y tres para la ronda **después**.",
+        "height": 640,
+        "width": 440,
+        "color": 5
+      },
+      "id": "07bc5f04-d83b-404e-9c38-d66b17e1d21a",
+      "name": "Nota -100 -20",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8391549e-d0b8-4caf-9c4d-94d5d1c8d454",
+              "name": "parte_fija",
+              "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "27dce102-5c2b-41a5-9701-0d3327c5400d",
+      "name": "El manual (parte fija)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Las mismas 3 consultas, dos veces:\n//   ronda ANTES   = sin señalador (sin cache_control): el manual se paga completo cada vez\n//   ronda DESPUÉS = con señalador (con cache_control): el manual queda sobre el escritorio\nconst consultas = [\n  { quien: 'Martina Sosa', remitente: 'Martina Sosa <martina.sosa@ejemplo.com>', fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina' },\n  { quien: 'Julián Pereyra', remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>', fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra' },\n  { quien: 'Rodrigo Díaz', remitente: 'Rodrigo Díaz <rodrigo.diaz@ejemplo.com>', fecha: 'miércoles 23/09/2026 10:15',\n    consulta: 'Hola. Tenemos una inmobiliaria y queremos hacer anuncios en Google para vender más departamentos este trimestre. Podríamos invertir unos 500 dólares por mes. ¿Cómo trabajan?\\n\\nRodrigo Díaz' }\n];\n\nconst antes = consultas.map(c => ({ json: { ...c, ronda: 'antes', senalador: false } }));\nconst despues = consultas.map(c => ({ json: { ...c, ronda: 'después', senalador: true } }));\nreturn [...antes, ...despues];"
+      },
+      "id": "c366a5cf-2384-4d28-bdae-be405d050c01",
+      "name": "Las consultas, dos veces",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Claude\nUn HTTP Request a la API normal (`/v1/messages`): responde en segundos, no hay que esperar.\n\nSi la consulta es de la ronda **después**, al final del manual va el señalador (`cache_control`). Es la única diferencia.\n\nManda de a una, cada 2 segundos, para que la primera deje el manual sobre el escritorio.",
+        "height": 640,
+        "width": 300,
+        "color": 2
+      },
+      "id": "43144235-7220-4278-88db-2527964643b0",
+      "name": "Nota 380 -20",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-5',\n  max_tokens: 1024,\n  thinking: { type: 'disabled' },\n  system: [ $json.senalador\n    ? { type: 'text', text: $('El manual (parte fija)').first().json.parte_fija, cache_control: { type: 'ephemeral' } }\n    : { type: 'text', text: $('El manual (parte fija)').first().json.parte_fija }\n  ],\n  messages: [{\n    role: 'user',\n    content: 'Remitente: ' + $json.remitente + '\\nFecha: ' + $json.fecha + '\\nConsulta:\\n' + $json.consulta\n  }]\n}) }}"
+      },
+      "id": "152af161-da36-40d3-972d-466e777dfd12",
+      "name": "Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Antes y después\nUna fila por consulta: los tokens **antes** y **después**, y lo que costó cada una.\n\n**Esperado después:** Martina guarda el manual; Julián y Rodrigo lo leen del escritorio.\n\nLa fila TOTAL lo dice en el ticket de 100.",
+        "height": 640,
+        "width": 300,
+        "color": 4
+      },
+      "id": "62a3a192-b390-4ccf-b0a6-9dcccb3ecdf4",
+      "name": "Nota 720 -20",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compara cada consulta ANTES (sin señalador) y DESPUÉS (con señalador).\n// Claude devuelve en \"usage\" la factura de cada llamada:\n//   input_tokens                = tokens a precio completo\n//   cache_creation_input_tokens = tokens que se GUARDARON en el escritorio (un poco más caros)\n//   cache_read_input_tokens     = tokens LEÍDOS del escritorio (10 veces más baratos)\n// Precios de Claude Sonnet 5 por millón de tokens (verificados el 28/09/2026):\n// entrada 2 · guardar en el escritorio 2,50 · leer del escritorio 0,20 · salida 10\nconst pedidos = $('Las consultas, dos veces').all();\nconst respuestas = $input.all();\nconst n = pedidos.length / 2;\nconst mil = x => x.toLocaleString('es-AR');\n\nconst costo = u => ((u.input_tokens || 0) * 2 + (u.cache_creation_input_tokens || 0) * 2.5\n  + (u.cache_read_input_tokens || 0) * 0.2 + (u.output_tokens || 0) * 10) / 1e6;\n\nlet totalAntes = 0, totalDespues = 0;\nconst filas = [];\nfor (let i = 0; i < n; i++) {\n  const a = respuestas[i].json.usage || {};\n  const d = respuestas[i + n].json.usage || {};\n  totalAntes += costo(a);\n  totalDespues += costo(d);\n\n  let despues = mil(d.input_tokens || 0) + ' a precio completo';\n  if (d.cache_creation_input_tokens) despues += ' + ' + mil(d.cache_creation_input_tokens) + ' GUARDADOS en el escritorio (un poco más caros)';\n  if (d.cache_read_input_tokens) despues += ' + ' + mil(d.cache_read_input_tokens) + ' LEÍDOS del escritorio (10 veces más baratos)';\n\n  filas.push({ json: {\n    consulta: pedidos[i].json.quien,\n    antes: mil(a.input_tokens || 0) + ' a precio completo',\n    despues,\n    costo_antes_usd: Number(costo(a).toFixed(5)),\n    costo_despues_usd: Number(costo(d).toFixed(5))\n  } });\n}\n\n// El ticket de 100: de cada 100 que costaba antes, cuánto cuesta después.\nconst deCada100 = Math.round(totalDespues / totalAntes * 100);\n// Con 600 consultas: el manual se guarda una vez y las otras 599 lo leen del escritorio.\nconst primera = costo(respuestas[n].json.usage || {});\nconst siguiente = (totalDespues - primera) / (n - 1);\nconst con600 = Math.round((primera + siguiente * 599) / (totalAntes / n * 600) * 100);\n\nfilas.push({ json: {\n  consulta: 'TOTAL (' + n + ' consultas)',\n  antes: 'US$ ' + totalAntes.toFixed(4).replace('.', ','),\n  despues: 'US$ ' + totalDespues.toFixed(4).replace('.', ','),\n  en_palabras: 'Con ' + n + ' consultas, de cada 100 que pagabas antes, ahora pagás ' + deCada100 + '. ' +\n    'Con 600 consultas pagarías unos ' + con600 + ': el cupón caché del ticket de 100.'\n} });\nreturn filas;"
+      },
+      "id": "d6e644d9-e076-496c-b507-ab32586e634e",
+      "name": "Antes y después",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        460
+      ]
+    }
+  ],
+  "connections": {
+    "Probar ahora": {
+      "main": [
+        [
+          {
+            "node": "El manual (parte fija)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "El manual (parte fija)": {
+      "main": [
+        [
+          {
+            "node": "Las consultas, dos veces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Las consultas, dos veces": {
+      "main": [
+        [
+          {
+            "node": "Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "main": [
+        [
+          {
+            "node": "Antes y después",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

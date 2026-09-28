@@ -8,7 +8,7 @@
         "width": 420,
         "color": 7
       },
-      "id": "0598727c-366a-4e15-8f41-15835073573c",
+      "id": "bac3e082-b714-4960-8e24-7587065e0f79",
       "name": "Nota -560 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -19,7 +19,7 @@
     },
     {
       "parameters": {},
-      "id": "93ec88e0-3419-4429-897f-4ef716a81200",
+      "id": "58f7ddc8-515f-46aa-9e0e-65127ead8e6c",
       "name": "Probar ahora",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
@@ -40,7 +40,7 @@
           ]
         }
       },
-      "id": "dd8f3469-9ed4-4824-bef1-03233893847f",
+      "id": "5b88e20a-3925-4a4a-bc24-9f9aa8a16c9c",
       "name": "El día 1 de cada mes, 22:00",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -56,7 +56,7 @@
         "width": 440,
         "color": 2
       },
-      "id": "26fc7d1a-0335-4241-b95e-749130fcebb8",
+      "id": "825bd3d6-5970-494b-b4ef-4fa006c16c1c",
       "name": "Nota -100 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -70,7 +70,7 @@
         "assignments": {
           "assignments": [
             {
-              "id": "003402f0-85f9-47e3-8edf-a1b7310e3d54",
+              "id": "9a1e63ec-68a2-4830-a5e9-1e849b50e6e6",
               "name": "parte_fija",
               "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
               "type": "string"
@@ -79,7 +79,7 @@
         },
         "options": {}
       },
-      "id": "cd44f85d-6d50-4fa3-910b-0b056c7b6d22",
+      "id": "7e181f2e-68c5-474f-9d55-5870bafd9f65",
       "name": "El manual (parte fija)",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -108,7 +108,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-5',\n  max_tokens: 0,\n  thinking: { type: 'disabled' },\n  system: [{\n    type: 'text',\n    text: $json.parte_fija,\n    cache_control: { type: 'ephemeral', ttl: '1h' }\n  }],\n  messages: [{ role: 'user', content: 'warmup' }]\n}) }}"
       },
-      "id": "40061958-511c-401f-8485-301a1869b206",
+      "id": "fcd98330-1bcd-49d8-8ed5-9c5edc3b6218",
       "name": "Poner el manual sobre el escritorio",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -124,7 +124,7 @@
         "width": 440,
         "color": 5
       },
-      "id": "88c6231f-1bd3-45f2-8d3a-f230dc623416",
+      "id": "bb4c7615-11b6-45c2-96cf-6de3ae14c333",
       "name": "Nota 380 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -144,7 +144,7 @@
         },
         "options": {}
       },
-      "id": "20cc0eb7-0cbf-4968-b4a2-6ae052a90ce0",
+      "id": "47184b41-5bd8-47b3-a154-3febfa4c6582",
       "name": "Las consultas del mes",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
@@ -163,7 +163,7 @@
           },
           "conditions": [
             {
-              "id": "ed09498f-a059-4654-842c-23bb7c52bdaf",
+              "id": "569bef35-7b44-4d1e-bb53-4d0e749ab85e",
               "leftValue": "={{ $json.from.text }}",
               "rightValue": "noreply",
               "operator": {
@@ -172,7 +172,7 @@
               }
             },
             {
-              "id": "f0aee4cc-0048-4f24-be54-ab5822fbc1ab",
+              "id": "aa1884b8-b25b-4835-84d9-8c730f876440",
               "leftValue": "={{ $json.from.text }}",
               "rightValue": "no-reply",
               "operator": {
@@ -181,7 +181,7 @@
               }
             },
             {
-              "id": "4c4bdb96-a863-4a04-98a7-13064d7dde60",
+              "id": "46d3ea29-03e3-4991-9c58-b72904435bd7",
               "leftValue": "={{ $json.subject }}",
               "rightValue": "automática",
               "operator": {
@@ -194,7 +194,7 @@
         },
         "options": {}
       },
-      "id": "b82e27e4-c4e1-4db0-b289-7dc761b94e74",
+      "id": "13e515f2-7f00-4281-a11e-f5663f76681e",
       "name": "No es respuesta automática",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -210,7 +210,7 @@
         "width": 440,
         "color": 2
       },
-      "id": "751d981c-bb2a-4500-aa30-54de347077ae",
+      "id": "8f09a57b-cd6f-45d3-843a-83a4bae0be28",
       "name": "Nota 860 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -223,7 +223,7 @@
       "parameters": {
         "jsCode": "// CUPÓN CACHÉ: cada consulta lleva el MISMO manual con el MISMO señalador.\n// Es lo que ya quedó sobre el escritorio, así Claude lo encuentra abierto\n// y lo cobra 10 veces más barato.\nconst manual = $('El manual (parte fija)').first().json.parte_fija;\n\n// Las consultas que pasaron el filtro. Cada correo de Gmail trae\n// el remitente (from.text), la fecha (date) y el texto (text).\nconst requests = $input.all().map((correo, i) => ({\n  // La etiqueta de cada consulta: las respuestas del lote vuelven mezcladas.\n  custom_id: 'consulta-' + (i + 1),\n  params: {\n    model: 'claude-sonnet-5',\n    max_tokens: 1024,\n    thinking: { type: 'disabled' },\n    // El manual + el señalador (cache_control). 1 hora, porque el lote puede tardar.\n    system: [{ type: 'text', text: manual, cache_control: { type: 'ephemeral', ttl: '1h' } }],\n    // Después del señalador, lo que cambia: la plantilla de la Guía 1 con este correo.\n    messages: [{\n      role: 'user',\n      content: 'Remitente: ' + correo.json.from.text + '\\nFecha: ' + correo.json.date + '\\nConsulta:\\n' + correo.json.text\n    }]\n  }\n}));\n\n// Todas las consultas del mes van en UN solo paquete.\nreturn [{ json: { paquete: { requests } } }];"
       },
-      "id": "676174b5-5fa7-44ed-a42e-c093f3dd730a",
+      "id": "85634475-81e6-4e22-be89-6e047b3f9dd4",
       "name": "Armar el paquete (cupón caché)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -252,7 +252,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.paquete) }}"
       },
-      "id": "dd05b83b-1011-4d96-b0b9-121249fab86b",
+      "id": "49db9815-8eb0-42fe-84fd-bb503191ef26",
       "name": "Enviar el lote (cupón lote)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -268,7 +268,7 @@
         "width": 640,
         "color": 2
       },
-      "id": "ee66c50a-3d68-4d4b-b093-4be0138791aa",
+      "id": "54501ed3-1a36-4fe4-a6ab-b06cceeb5801",
       "name": "Nota 1340 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -283,7 +283,7 @@
         "amount": 1,
         "unit": "minutes"
       },
-      "id": "3fda3ea7-ab51-479f-8c83-52ce0915b829",
+      "id": "b8462294-a70d-4473-9f9d-181b9656b26d",
       "name": "Esperar 1 minuto",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -309,7 +309,7 @@
         },
         "options": {}
       },
-      "id": "42b257a7-961e-4790-8189-ec683ff681c8",
+      "id": "351ff7dd-e977-45c1-864e-9f11bae552ab",
       "name": "Preguntar si terminó",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -328,7 +328,7 @@
           },
           "conditions": [
             {
-              "id": "56f756ac-ddd0-4730-90aa-058bf4d82e76",
+              "id": "ffefe79b-7dbc-4463-91cd-c54217b0c5e9",
               "leftValue": "={{ $json.processing_status }}",
               "rightValue": "ended",
               "operator": {
@@ -341,7 +341,7 @@
         },
         "options": {}
       },
-      "id": "618da738-6d26-4b23-a9de-8191a0e99df7",
+      "id": "d3528caf-1a22-4086-a706-b279d61dbd2c",
       "name": "¿Terminó?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -357,7 +357,7 @@
         "width": 640,
         "color": 5
       },
-      "id": "d6a2556c-d06d-4e60-970c-4606854630f4",
+      "id": "a0e9e9c5-1ef8-46fc-8033-4f01fe2ffa25",
       "name": "Nota 2020 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -389,7 +389,7 @@
           }
         }
       },
-      "id": "89b2cbed-26e9-4cbc-bc1c-5424490cdfac",
+      "id": "39e04473-f037-4c20-826c-a52861ee9f10",
       "name": "Retirar las respuestas",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -402,7 +402,7 @@
       "parameters": {
         "jsCode": "// Las respuestas llegan en formato JSONL: una línea por consulta.\n// Como en la Semana 5 (Parse JSON), cada respuesta es una maleta cerrada:\n// un texto con el JSON adentro. Acá la abrimos para usar sus campos.\nconst correos = $('No es respuesta automática').all();\nconst lineas = ($input.first().json.data || '').split('\\n').filter(l => l.trim());\n\nreturn lineas.map(linea => {\n  const r = JSON.parse(linea);\n  const n = Number(r.custom_id.split('-')[1]) - 1;   // consulta-1 es el correo 0\n  const mensaje = (r.result && r.result.message) || {};\n\n  let datos = {};\n  try {\n    const texto = (mensaje.content || []).map(b => b.text || '').join('');\n    datos = JSON.parse(texto.replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = { servicio: 'Sin respuesta', resumen: 'Revisar a mano: ' + r.custom_id };\n  }\n\n  return { json: {\n    quien: correos[n] ? correos[n].json.from.text : r.custom_id,\n    servicio: datos.servicio,\n    presupuesto_usd: datos.presupuesto_usd,\n    prioridad: datos.prioridad,\n    resumen: datos.resumen,\n    factura: mensaje.usage || {}\n  } };\n});"
       },
-      "id": "c99769a5-5409-4bef-b862-308d695e395c",
+      "id": "a229b98f-2724-42ce-b961-589213b5a5f7",
       "name": "Abrir la maleta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -415,7 +415,7 @@
       "parameters": {
         "jsCode": "// Arma el correo para Paula con las tres preguntas del reporte:\n// qué servicios piden, con qué presupuesto y con qué urgencia.\nconst consultas = $input.all().map(i => i.json);\nconst cantidad = consultas.length;\n\n// 1. Qué servicios piden\nconst porServicio = {};\nconsultas.forEach(c => { porServicio[c.servicio] = (porServicio[c.servicio] || 0) + 1; });\nconst servicios = Object.entries(porServicio).sort((a, b) => b[1] - a[1])\n  .map(([s, n]) => '- ' + s + ': ' + n).join('\\n');\n\n// 2. Con qué presupuesto (solo las que mencionan un monto)\nconst conMonto = consultas.filter(c => typeof c.presupuesto_usd === 'number');\nconst totalMonto = conMonto.reduce((t, c) => t + c.presupuesto_usd, 0);\n\n// 3. Con qué urgencia\nconst urgentes = consultas.filter(c => c.prioridad === 5);\nconst medias = consultas.filter(c => c.prioridad === 3 || c.prioridad === 4);\nconst bajas = consultas.filter(c => c.prioridad === 1 || c.prioridad === 2);\n\n// La factura: cuánto costó el reporte con los dos cupones y cuánto habría costado sin ellos.\n// Precios de Claude Sonnet 5 por millón de tokens (verificados el 28/09/2026).\n// Sin cupones: entrada 2, salida 10. En lote: entrada 1, salida 5,\n// lectura del escritorio 0,10, guardar 1 hora 2. Poner el manual sobre el escritorio: 4.\nlet sin = 0, con = 0;\nconsultas.forEach(c => {\n  const u = c.factura;\n  const entrada = u.input_tokens || 0, guardados = u.cache_creation_input_tokens || 0;\n  const leidos = u.cache_read_input_tokens || 0, salida = u.output_tokens || 0;\n  sin += ((entrada + guardados + leidos) * 2 + salida * 10) / 1e6;\n  con += (entrada * 1 + guardados * 2 + leidos * 0.1 + salida * 5) / 1e6;\n});\nconst u0 = $('Poner el manual sobre el escritorio').first().json.usage || {};\nconst escritorio = ((u0.input_tokens || 0) * 2 + (u0.cache_creation_input_tokens || 0) * 4) / 1e6;\ncon += escritorio;\nconst deCada100 = Math.round(con / sin * 100);\n// Con 600 consultas, el manual se pone sobre el escritorio una sola vez y se reparte entre todas.\nconst con600 = Math.round((escritorio + (con - escritorio) / cantidad * 600) / (sin / cantidad * 600) * 100);\nconst usd = n => 'US$ ' + n.toFixed(4).replace('.', ',');\n\nconst mensaje = [\n  'Hola Paula, este es el reporte de las consultas del último mes.',\n  '',\n  'Consultas analizadas: ' + cantidad,\n  '',\n  'QUÉ SERVICIOS PIDEN',\n  servicios,\n  '',\n  'CON QUÉ PRESUPUESTO',\n  '- Mencionan un monto: ' + conMonto.length + ' de ' + cantidad + ' (en total, USD ' + totalMonto + ')',\n  '',\n  'CON QUÉ URGENCIA',\n  '- Quieren avanzar ya (prioridad 5): ' + urgentes.length,\n  '- Interés concreto, sin apuro (3 o 4): ' + medias.length,\n  '- Solo averiguan (1 o 2): ' + bajas.length,\n  '',\n  'LAS MÁS URGENTES',\n  urgentes.map(c => '- ' + c.quien + ': ' + c.resumen).join('\\n') || '- Ninguna',\n  '',\n  'LO QUE COSTÓ ESTE REPORTE (Claude Sonnet 5, con caché y lote)',\n  '- Sin cupones: ' + usd(sin) + '. Con los dos cupones: ' + usd(con) + '.',\n  '- De cada 100, pagamos ' + deCada100 + '. Con 600 consultas pagaríamos unos ' + con600 + '.',\n  '',\n  '(Reporte automático)'\n].join('\\n');\n\nreturn [{ json: { asunto: 'Reporte mensual de consultas - Agencia Norte', mensaje } }];"
       },
-      "id": "bcce49bf-5037-4e5c-b780-d08dcb11b2f8",
+      "id": "ac04d1a3-e393-42ed-97d4-fb2c91824bf5",
       "name": "Armar el reporte",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -434,7 +434,7 @@
           "appendAttribution": false
         }
       },
-      "id": "4292ab6a-202c-4b91-bb99-805c25d1f3cd",
+      "id": "1df874f0-9611-4752-882d-1a710336a324",
       "name": "Enviar el reporte a Paula",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
