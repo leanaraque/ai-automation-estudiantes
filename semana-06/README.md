@@ -25,7 +25,7 @@ flowchart LR
 2. **Prompt Caching**: la parte que no cambia se guarda en la memoria rápida de Claude y, a partir de la segunda vez, cuesta **10 veces menos**.
 3. **Message Batches**: si podés esperar (hasta 24 horas), mandás todo junto y pagás **la mitad**.
 
-Las dos rebajas se pueden combinar, pero **no se suman**: se aplican una sobre la otra (Guía 2).
+Las dos rebajas se pueden combinar, pero **no se suman**: se aplican una sobre la otra. La forma más fácil de verlo es el **ticket de 100** del principio de la Guía 2: sin descuentos 100, con caché 34, con lote 50, con los dos 17.
 
 ## Guías (en este orden)
 

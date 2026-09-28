@@ -2,6 +2,34 @@
 
 Seguimos con el reporte mensual de Agencia Norte: **600 consultas**, cada una con la plantilla de la Guía 1.
 
+## La idea en un minuto: el ticket de 100
+
+Imaginá que el reporte del mes cuesta **100**. Se reparte así:
+
+| Qué pagamos | De cada 100 |
+|---|---:|
+| El catálogo y las reglas (la parte fija, igual en las 600 consultas) | 73 |
+| Los correos de los clientes (la parte variable) | 6 |
+| Las respuestas de la IA | 21 |
+
+Hay dos cupones de descuento:
+
+- **Cupón caché**: 90% de descuento, pero **solo en el catálogo**. El 73 pasa a 7 y el ticket queda en **34**.
+- **Cupón lote**: 50% de descuento en **todo el ticket**, si aceptás esperar hasta un día. El ticket queda en **50**.
+- **Los dos juntos**: primero el cupón del caché (queda 34), después la mitad: **17**.
+
+```mermaid
+flowchart LR
+    T["Ticket del mes<br/>catálogo 73 + correos 6 + respuestas 21<br/>= 100"] --> C1["Cupón caché<br/>solo el catálogo: 73 pasa a 7<br/>ticket: 34"]
+    T --> C2["Cupón lote<br/>todo a mitad de precio<br/>ticket: 50"]
+    C1 --> A["Los dos cupones<br/>primero el caché: 34<br/>después la mitad: 17"]
+    E["Error típico: sumar los cupones<br/>90% + 50% = 140% de descuento<br/>(imposible)"] -.- A
+```
+
+Los cupones **no se suman**: se aplican uno después del otro, como en el súper. Con dólares reales pasa lo mismo: el reporte cuesta US$ 3,74; con caché, un tercio; con lote, la mitad; con los dos, un sexto (US$ 0,65).
+
+El resto de esta guía explica cada cupón y hace las cuentas con dólares. Las vas a necesitar para la Pieza 4 de tu pre-entrega.
+
 ## Primero: qué se paga
 
 Como viste en la Semana 2 con la analogía del Uber, la IA cobra por **tokens** (pedazos de palabras). En cada llamada se pagan dos cosas:
