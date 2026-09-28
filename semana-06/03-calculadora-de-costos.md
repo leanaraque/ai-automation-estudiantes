@@ -24,7 +24,7 @@ También funciona en Excel, tal cual.
 ## Paso a paso con tu caso
 
 1. **Cantidad de solicitudes**: cuántas veces se ejecuta tu plantilla (ej.: 500 reseñas, 200 contratos).
-2. **Tokens de la parte fija**: una estimación rápida es contar las palabras de tu parte fija y multiplicarlas por 2. Si tenés acceso al Playground de Claude, usá el número real que muestra.
+2. **Tokens de la parte fija**: una estimación rápida es contar las palabras de tu parte fija y multiplicarlas por 3 (con la plantilla de Agencia Norte, 777 palabras dieron 2.261 tokens). Si tenés acceso al Playground de Claude, medila: mandá solo "Hola" con tu parte fija en System y restale 3 a los tokens de entrada.
 3. **Tokens de la parte variable** y **de salida**: mismo método.
 4. **Modelo**: elegí uno en la hoja **Precios** y copiá sus cinco precios (B9 a B13) y su mínimo cacheable (B15).
 5. Mirá la **fila 20**: dice si tu parte fija supera el mínimo cacheable de tu modelo.
@@ -34,7 +34,7 @@ También funciona en Excel, tal cual.
 
 ### Ejemplo: el mismo reporte con Haiku 4.5
 
-Cambiá B8 a `Claude Haiku 4.5`, B9 a `1`, B10 a `5`, B11 a `1,25`, B12 a `2`, B13 a `0,1` y B15 a `4096` (en Sheets en inglés, los decimales van con punto). La fila 20 dice **NO**: 1.500 tokens es menos que 4.096. La base baja a US$ 1,53 (Haiku es más barato), pero el caché no aporta nada.
+Cambiá B8 a `Claude Haiku 4.5`, B9 a `1`, B10 a `5`, B11 a `1,25`, B12 a `2`, B13 a `0,1` y B15 a `4096` (en Sheets en inglés, los decimales van con punto). La fila 20 dice **NO**: 2.261 tokens es menos que 4.096. La base baja a US$ 1,87 (Haiku es más barato), pero el caché no aporta nada: con Batch queda en US$ 0,93.
 
 ## Qué copiar a tu PDF
 
@@ -46,9 +46,9 @@ Cambiá B8 a `Claude Haiku 4.5`, B9 a `1`, B10 a `5`, B11 a `1,25`, B12 a `2`, B
 
 | Escenario | Total | Ahorro |
 |---|---:|---:|
-| Base, sin optimizar | US$ 3,06 | 0% |
-| Solo Batch | US$ 1,53 | 50,0% |
-| Solo Caching (5 minutos) | US$ 1,44 | 52,8% |
-| Caching (1 hora) + Batch | US$ 0,72 | 76,4% |
+| Base, sin optimizar | US$ 3,74 | 0% |
+| Solo Batch | US$ 1,87 | 50,0% |
+| Solo Caching (5 minutos) | US$ 1,30 | 65,2% |
+| Caching (1 hora) + Batch | US$ 0,65 | 82,6% |
 
-Supuestos: 600 consultas · parte fija 1.500 tokens · parte variable 300 · salida 150.
+Supuestos, medidos en el Playground de Claude: 600 consultas · parte fija 2.261 tokens · parte variable 177 · salida 135 (promedios de los correos de Martina y Julián).

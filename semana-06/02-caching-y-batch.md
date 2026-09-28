@@ -13,14 +13,16 @@ Con **Claude Sonnet 5**, la entrada cuesta US$ 2 por millón de tokens y la sali
 
 | | Tokens por consulta | x 600 consultas | Costo |
 |---|---:|---:|---:|
-| Parte fija (prefijo) | 1.500 | 900.000 | US$ 1,80 |
-| Parte variable | 300 | 180.000 | US$ 0,36 |
-| Salida | 150 | 90.000 | US$ 0,90 |
-| **Total sin optimizar** | | | **US$ 3,06** |
+| Parte fija (prefijo) | 2.261 | 1.356.600 | US$ 2,71 |
+| Parte variable (promedio) | 177 | 106.200 | US$ 0,21 |
+| Salida (promedio) | 135 | 81.000 | US$ 0,81 |
+| **Total sin optimizar** | | | **US$ 3,74** |
 
-Mirá la primera fila: **más de la mitad del costo es la parte fija**, que es idéntica en las 600 llamadas. Estamos pagando 600 veces por leer el mismo catálogo. Ahí entra el caché.
+(El total sale de los valores sin redondear: por eso la suma de los tres montos da 3,73.)
 
-> Los tokens de cada parte son estimados. El número exacto lo muestra el Playground de la consola de Claude después de cada pedido.
+Mirá la primera fila: **casi tres cuartos del costo es la parte fija**, que es idéntica en las 600 llamadas. Estamos pagando 600 veces por leer el mismo catálogo. Ahí entra el caché.
+
+> Estos tokens se midieron en el Playground de la consola de Claude con Claude Sonnet 5. La parte fija se midió mandando solo "Hola" (2.264 tokens de entrada, menos unos 3 del "Hola"); la parte variable y la salida son el promedio de los correos de Martina y de Julián. Un dato útil: estimando por la cantidad de palabras habríamos calculado unos 1.500 tokens para la parte fija. Los modelos nuevos cuentan más tokens por palabra: por eso conviene medir.
 
 ---
 
@@ -45,11 +47,11 @@ Con nuestras 600 consultas seguidas:
 
 | Prefijo | Cuenta | Costo |
 |---|---|---:|
-| Sin caché | 600 x 1.500 tokens a US$ 2 por millón | US$ 1,80 |
-| Con caché | 1 escritura (1.500 a US$ 2,50) + 599 lecturas (898.500 a US$ 0,20) | US$ 0,18 |
+| Sin caché | 600 x 2.261 tokens a US$ 2 por millón | US$ 2,71 |
+| Con caché | 1 escritura (2.261 a US$ 2,50) + 599 lecturas (1.354.339 a US$ 0,20) | US$ 0,28 |
 | **Ahorro sobre el prefijo** | | **90%** |
 
-El costo total baja de **US$ 3,06 a US$ 1,44** (52,8% menos). No baja 90% porque la parte variable y la salida se siguen pagando igual: el caché solo abarata lo que se repite.
+El costo total baja de **US$ 3,74 a US$ 1,30** (65,2% menos). No baja 90% porque la parte variable y la salida se siguen pagando igual: el caché solo abarata lo que se repite.
 
 ### La regla de oro: el orden
 
@@ -80,7 +82,7 @@ flowchart LR
 
 **Cuándo NO usar Batch**: cuando alguien espera la respuesta. El flujo de la Semana 5 (Martina esperando un WhatsApp) no puede ir en lote.
 
-Solo con Batch: **US$ 3,06 pasa a US$ 1,53**.
+Solo con Batch: **US$ 3,74 pasa a US$ 1,87**.
 
 > En n8n, un lote se arma con las piezas de la Semana 4: un trigger programado (viernes 22:00), un nodo **HTTP Request** que envía el lote a la API de Claude, y otro que después pregunta si terminó y descarga los resultados.
 
@@ -90,20 +92,20 @@ Solo con Batch: **US$ 3,06 pasa a US$ 1,53**.
 
 ```mermaid
 flowchart LR
-    B["Base<br/>US$ 3,06"] --> C["1. Primero el caché<br/>sobre el prefijo<br/>US$ 1,44"] --> D["2. Después el 50% de Batch<br/>sobre ese resultado<br/>US$ 0,72"]
+    B["Base<br/>US$ 3,74"] --> C["1. Primero el caché<br/>sobre el prefijo<br/>US$ 1,30"] --> D["2. Después el 50% de Batch<br/>sobre ese resultado<br/>US$ 0,65"]
     E["ERROR TÍPICO<br/>50% + 90% = 140% de ahorro<br/>(imposible: no se puede ahorrar más del 100%)"]
 ```
 
 | Escenario | Total | Ahorro |
 |---|---:|---:|
-| Base, sin optimizar | US$ 3,06 | 0% |
-| Solo Batch | US$ 1,53 | 50,0% |
-| Solo Caching (5 minutos) | US$ 1,44 | 52,8% |
-| **Caching (1 hora) + Batch** | **US$ 0,72** | **76,4%** |
+| Base, sin optimizar | US$ 3,74 | 0% |
+| Solo Batch | US$ 1,87 | 50,0% |
+| Solo Caching (5 minutos) | US$ 1,30 | 65,2% |
+| **Caching (1 hora) + Batch** | **US$ 0,65** | **82,6%** |
 
 Dos aclaraciones:
 
-- En un lote, usamos el **caché de 1 hora**: el lote puede tardar más de 5 minutos y así el prefijo sigue guardado. Aun así, dentro de un lote los aciertos de caché no están garantizados: el costo real queda entre US$ 0,72 y US$ 1,53.
+- En un lote, usamos el **caché de 1 hora**: el lote puede tardar más de 5 minutos y así el prefijo sigue guardado. Aun así, dentro de un lote los aciertos de caché no están garantizados: el costo real queda entre US$ 0,65 y US$ 1,87.
 - Lo que baja es el **costo por token**, no la **cantidad** de tokens. Las 600 consultas siguen teniendo los mismos tokens.
 
 La [calculadora](./03-calculadora-de-costos.md) hace todas estas cuentas por vos.

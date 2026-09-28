@@ -73,7 +73,7 @@ El `cache_control` va en el **último bloque de la parte fija**. Le dice a la AP
   "system": [
     {
       "type": "text",
-      "text": "Actuá como analista comercial senior de Agencia Norte... (toda la PARTE FIJA de la Pieza 1: rol, catálogo, información general, reglas, ejemplos y la instrucción de pensar paso a paso; unos 1.500 tokens)",
+      "text": "Actuá como analista comercial senior de Agencia Norte... (toda la PARTE FIJA de la Pieza 1: rol, catálogo, información general, reglas, ejemplos y la instrucción de pensar paso a paso; unos 2.261 tokens)",
       "cache_control": { "type": "ephemeral", "ttl": "1h" }
     }
   ],
@@ -98,14 +98,14 @@ Fijate que las variables están **fuera** del bloque cacheado, en `messages`. Es
 
 Usá la [calculadora](./03-calculadora-de-costos.md) con tus números. El ejemplo de Agencia Norte:
 
-**Supuestos** (escribilos siempre: es lo que hace verificable la cuenta): 600 consultas · parte fija 1.500 tokens · parte variable 300 · salida 150 · Claude Sonnet 5 (US$ 2 entrada, US$ 10 salida, US$ 2,50 escritura de caché 5 min, US$ 4 escritura 1 h, US$ 0,20 lectura, por millón de tokens).
+**Supuestos** (escribilos siempre: es lo que hace verificable la cuenta): 600 consultas · parte fija 2.261 tokens · parte variable 177 · salida 135 (medidos en el Playground de Claude) · Claude Sonnet 5 (US$ 2 entrada, US$ 10 salida, US$ 2,50 escritura de caché 5 min, US$ 4 escritura 1 h, US$ 0,20 lectura, por millón de tokens).
 
 | Fila | La cuenta | Resultado |
 |---|---|---:|
-| Base, sin optimizar | Entrada: 1.080.000 tokens x US$ 2 por millón = US$ 2,16 · Salida: 90.000 x US$ 10 por millón = US$ 0,90 | US$ 3,06 |
-| **Ahorro por Message Batches (-50%)** | US$ 3,06 x 50% | **- US$ 1,53** |
-| **Ahorro por Prompt Caching** | Prefijo sin caché: 900.000 x US$ 2 = US$ 1,80 · Con caché: 1 escritura (1.500 x US$ 2,50) + 599 lecturas (898.500 x US$ 0,20) = US$ 0,18 · 90% menos sobre el prefijo | **- US$ 1,62** |
-| Los dos combinados | Primero el caché (1 h), después el 50% sobre ese resultado | US$ 0,72 (76,4% menos) |
+| Base, sin optimizar | Entrada: 1.462.800 tokens x US$ 2 por millón = US$ 2,93 · Salida: 81.000 x US$ 10 por millón = US$ 0,81 | US$ 3,74 |
+| **Ahorro por Message Batches (-50%)** | US$ 3,74 x 50% | **- US$ 1,87** |
+| **Ahorro por Prompt Caching** | Prefijo sin caché: 1.356.600 x US$ 2 = US$ 2,71 · Con caché: 1 escritura (2.261 x US$ 2,50) + 599 lecturas (1.354.339 x US$ 0,20) = US$ 0,28 · 90% menos sobre el prefijo | **- US$ 2,44** |
+| Los dos combinados | Primero el caché (1 h), después el 50% sobre ese resultado | US$ 0,65 (82,6% menos) |
 
 > Los dos ahorros **no se suman**: actúan sobre bases que se solapan (el prefijo está adentro de la entrada del lote). Un PDF que dice "50% + 90% = 140% de ahorro" está mal. Y ojo con el vocabulario: lo que baja es el **costo por token**, no la cantidad de tokens.
 
