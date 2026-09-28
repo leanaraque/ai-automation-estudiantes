@@ -1,62 +1,80 @@
-# Guía 5 (opcional) — Los dos cupones, aplicados en tu automatización
+# Guía 5 (opcional) — El reporte mensual para Paula, en n8n
 
-> **Opcional.** No se entrega ni suma a la nota: la Pre-entrega 6 es solo el PDF. Esta guía responde la pregunta práctica: **¿qué configuro en mi flujo para pagar menos?**
+> **Opcional.** No se entrega ni suma a la nota: la Pre-entrega 6 es solo el PDF. Esta guía muestra cómo se ve en un flujo real lo que diseñamos en clase: el reporte de las consultas del mes, leído por Claude gastando lo mínimo.
 
-## La respuesta corta
+## Por qué es un flujo nuevo y no el de la Semana 5
 
-Ejecutar el flujo una vez por semana **no alcanza**. Ninguno de los dos cupones es automático, y los nodos de Anthropic que trae n8n no aplican ninguno: mandan cada consulta a precio completo aunque el flujo corra una sola vez por semana.
+La pregunta de la clase decide: **¿alguien espera la respuesta?**
 
-Los cupones se piden en **cómo le hablás a la API**, con un nodo HTTP Request (el de la Semana 4). Son tres cosas:
-
-| Qué configurás | Dónde | Qué cupón da |
+| | Flujo de la Semana 5 | Este flujo |
 |---|---|---|
-| **1. El señalador** en cada consulta: `cache_control` al final del manual, con el manual igual y primero en todas | El cuerpo de cada pedido | Cupón caché: el manual se lee 10 veces más barato |
-| **2. La dirección del lote**: todas las consultas juntas, en un paquete, a `/v1/messages/batches` en lugar de `/v1/messages` | La URL del HTTP Request | Cupón lote: todo a mitad de precio |
-| **3. Esperar y retirar**: el lote no responde en el momento, así que el flujo espera, pregunta si terminó y descarga las respuestas | Nodos Wait, HTTP Request e IF | Ninguno: es lo que el lote exige a cambio |
+| Qué hace | Atiende cada consulta cuando llega | Lee todas las consultas del mes juntas |
+| ¿Alguien espera? | Sí: Martina espera el WhatsApp | No: Paula lee el reporte el lunes |
+| Cupón lote | No se puede: el lote tarda | Sí: la mitad de precio |
+| Cupón caché | No aplica: el prompt es corto (menos de 1.024 tokens) | Sí: el manual tiene unos 2.260 tokens |
 
-Y una recomendación de la documentación de Claude: antes del lote, **poner el manual sobre el escritorio** con una llamada chica (`max_tokens: 0`). Dentro de un lote las consultas se procesan al mismo tiempo, y sin esto muchas no encuentran el manual abierto.
+Los dos flujos conviven: el de la Semana 5 sigue avisando en el momento, y este arma el reporte una vez por mes.
 
-La ejecución semanal (Schedule Trigger) solo decide **cuándo** corre el flujo. No cambia el precio.
+## Qué configurás para pagar menos
 
-## El flujo, de punta a punta
+Ningún cupón es automático. Ejecutar el flujo una vez por mes no alcanza, y los nodos de Anthropic que trae n8n no aplican ninguno. Los cupones se piden con un nodo **HTTP Request** (el de la Semana 4):
 
-Es el reporte de Agencia Norte con los dos cupones, en una sola ejecución:
+| Qué configurás | Qué cupón da |
+|---|---|
+| **El señalador:** `cache_control` al final del manual, en cada consulta, con el manual igual y primero | Cupón caché: el manual se lee 10 veces más barato |
+| **La dirección del lote:** todas las consultas en un paquete, a `/v1/messages/batches` en lugar de `/v1/messages` | Cupón lote: todo a mitad de precio |
+| **Esperar y retirar:** el flujo espera, pregunta si el lote terminó y descarga las respuestas | Ninguno: es lo que el lote pide a cambio |
+| **Poner el manual sobre el escritorio** antes del lote: una llamada chica (`max_tokens: 0`) | Ayuda a que el cupón caché funcione dentro del lote (lo recomienda la documentación de Claude) |
+
+## El flujo
 
 ```mermaid
 flowchart TB
-    subgraph P["1. PREPARAR"]
+    subgraph P["1. EL MANUAL SOBRE EL ESCRITORIO"]
         direction LR
         T1["Probar ahora<br/>(Manual Trigger)"]:::ya --> M["El manual<br/>(parte fija de la Guía 1)"]:::ya
-        T2["Todos los viernes 22:00<br/>(Schedule Trigger)"]:::ya --> M
-        M --> W["Poner el manual sobre el escritorio<br/>HTTP Request a /v1/messages<br/>max_tokens 0 + señalador de 1 hora"]:::nuevo
+        T2["El día 1 de cada mes, 22:00<br/>(Schedule Trigger)"]:::ya --> M
+        M --> W["Poner el manual sobre el escritorio<br/>HTTP Request · max_tokens 0<br/>+ señalador de 1 hora"]:::nuevo
     end
-    subgraph C["2. LOS DOS CUPONES"]
+    subgraph C["2. LAS CONSULTAS DEL MES (como en la Semana 5)"]
         direction LR
-        Q["Las consultas de la semana<br/>(en tu flujo real: Gmail)"]:::ya --> PQ["Armar el paquete<br/>CUPÓN CACHÉ: cada consulta con<br/>el mismo manual y el mismo señalador"]:::nuevo --> E["Enviar el lote<br/>CUPÓN LOTE: HTTP Request a<br/>/v1/messages/batches"]:::nuevo
+        G["Las consultas del mes<br/>Gmail · Get many messages<br/>etiqueta Agencia Norte, últimos 30 días"]:::ya --> F{"No es respuesta<br/>automática<br/>(IF)"}:::ya
     end
-    subgraph R["3. ESPERAR Y RETIRAR"]
+    subgraph L["3. LOS DOS CUPONES"]
         direction LR
-        ES["Esperar 1 minuto<br/>(Wait)"]:::ya --> PR["Preguntar si terminó<br/>(HTTP Request)"]:::ya --> IF{"¿Terminó?<br/>(IF)"}:::nota
+        PQ["Armar el paquete<br/>CUPÓN CACHÉ: cada consulta con<br/>el mismo manual y el mismo señalador"]:::nuevo --> E["Enviar el lote<br/>CUPÓN LOTE: HTTP Request a<br/>/v1/messages/batches"]:::nuevo
+    end
+    subgraph R["4. ESPERAR Y RETIRAR"]
+        direction LR
+        ES["Esperar 1 minuto<br/>(Wait)"]:::nuevo --> PR["Preguntar si terminó<br/>(HTTP Request)"]:::nuevo --> IF{"¿Terminó?<br/>(IF)"}:::nota
         IF -- "no" --> ES
-        IF -- "sí" --> RT["Retirar las respuestas<br/>(HTTP Request)"]:::ya
+        IF -- "sí" --> RT["Retirar las respuestas<br/>(HTTP Request)"]:::nuevo
     end
-    F["4. EL REPORTE Y LA FACTURA<br/>una fila por consulta + fila TOTAL: de cada 100, cuánto pagaste<br/>(en tu flujo real: Google Sheets)"]:::ya
-    P --> C --> R --> F
+    subgraph RP["5. EL REPORTE PARA PAULA"]
+        direction LR
+        AM["Abrir la maleta<br/>(como el Parse JSON<br/>de la Semana 5)"]:::ya --> AR["Armar el reporte<br/>servicios, presupuesto,<br/>urgencia y lo que costó"]:::ya --> EN["Enviar el reporte a Paula<br/>(Gmail · Send)"]:::ya
+    end
+    P --> C
+    C -- "solo las que pasan el filtro" --> L
+    L --> R --> RP
 
     classDef ya fill:#171717,stroke:#171717,color:#F8F2E8
     classDef nuevo fill:#FF632B,stroke:#FF632B,color:#F8F2E8
     classDef nota fill:#FDAB2E,stroke:#FDAB2E,color:#171717
     style P fill:#FFFFFF,stroke:#E0D7C9,color:#171717
     style C fill:#FFFFFF,stroke:#E0D7C9,color:#171717
+    style L fill:#FFFFFF,stroke:#E0D7C9,color:#171717
     style R fill:#FFFFFF,stroke:#E0D7C9,color:#171717
+    style RP fill:#FFFFFF,stroke:#E0D7C9,color:#171717
 ```
 
-En naranja, lo que configurás para los cupones. Todo lo demás es un flujo como los de la Semana 4. En el lienzo, cada tramo tiene una nota que lo explica, y los nodos Code traen comentarios.
+En negro, piezas que ya conocés. En naranja, las nuevas. En el lienzo de n8n cada tramo tiene una nota que lo explica, y los nodos Code traen comentarios.
 
 ## Qué necesitás
 
-- Una cuenta de **n8n Cloud** (la prueba gratuita dura 14 días; si la tuya venció, podés leer el flujo igual).
-- Saldo en la consola de Claude: [platform.claude.com](https://platform.claude.com) > **Billing**. La API se paga aparte de la suscripción a Claude. Cada prueba de este flujo cuesta alrededor de un centavo de dólar.
+- Una cuenta de **n8n Cloud** (la prueba gratuita dura 14 días).
+- Tu Gmail con la etiqueta **Agencia Norte** y los [correos de prueba de la Semana 5](../semana-05/correos-de-prueba.md). El flujo busca los de los últimos 30 días; si son más viejos, reenviátelos y ponelos en la etiqueta.
+- Saldo en la consola de Claude: [platform.claude.com](https://platform.claude.com) > **Billing**. La API se paga aparte de la suscripción a Claude. Cada prueba cuesta alrededor de un centavo de dólar.
 
 ## Paso 1 · Importar el flujo
 
@@ -64,50 +82,79 @@ En naranja, lo que configurás para los cupones. Todo lo demás es un flujo como
 2. Tres puntos (arriba a la derecha) > **Import from URL** y pegá:
 
 ```
-https://raw.githubusercontent.com/leanaraque/ai-automation-estudiantes/main/semana-06/n8n/el-reporte-con-los-dos-cupones.json
+https://raw.githubusercontent.com/leanaraque/ai-automation-estudiantes/main/semana-06/n8n/el-reporte-mensual-para-paula.json
 ```
 
-   Si preferís el archivo: abrí [`n8n/el-reporte-con-los-dos-cupones.json`](./n8n/el-reporte-con-los-dos-cupones.json) > **Download raw file** > en n8n, tres puntos > **Import from File**.
+   Si preferís el archivo: abrí [`n8n/el-reporte-mensual-para-paula.json`](./n8n/el-reporte-mensual-para-paula.json) > **Download raw file** > en n8n, tres puntos > **Import from File**.
 
-## Paso 2 · Conectar tu clave de la API
+## Paso 2 · Conectar las credenciales
+
+**Claude (4 nodos HTTP Request):**
 
 1. Creá la clave en [platform.claude.com/settings/keys](https://platform.claude.com/settings/keys) > **Create key**. **Elegí un workspace** (por ejemplo, Default): una clave sin workspace no funciona en n8n. Copiala: empieza con `sk-ant-` y se muestra **una sola vez**.
-2. En n8n, doble clic en **Poner el manual sobre el escritorio** > **Credential for Anthropic** > **Create new credential** > pegá la clave en **API Key** > **Save**. n8n la prueba al guardarla: si da error, la clave está mal copiada.
-3. En los otros tres nodos HTTP Request (**Enviar el lote**, **Preguntar si terminó** y **Retirar las respuestas**), elegí esa misma credencial en **Credential for Anthropic**.
+2. Doble clic en **Poner el manual sobre el escritorio** > **Credential for Anthropic** > **Create new credential** > pegá la clave en **API Key** > **Save**. n8n la prueba al guardarla.
+3. En **Enviar el lote**, **Preguntar si terminó** y **Retirar las respuestas**, elegí esa misma credencial.
+
+**Si al guardar aparece "Couldn't connect with these settings - Bad Request":** la clave no tiene workspace. Creá otra eligiendo un workspace. O, con la misma clave, activá **Add Custom Header** en la credencial: **Header Name** `anthropic-workspace-id` y **Header Value** el ID de tu workspace (empieza con `wrkspc_`; está en [platform.claude.com/settings/workspaces](https://platform.claude.com/settings/workspaces)).
+
+**Gmail (2 nodos):**
+
+4. Doble clic en **Las consultas del mes** > en la credencial, **Create new credential** > **Sign in with Google** > elegí tu cuenta y aceptá los permisos.
+5. En **Enviar el reporte a Paula**, elegí esa misma credencial y en **To** cambiá `tu.correo@ejemplo.com` por tu correo.
+
+Si tu etiqueta no se llama "Agencia Norte", cambiá la búsqueda en **Las consultas del mes** > **Filters** > **Search**: `label:agencia-norte` (en Gmail, los espacios de la etiqueta se escriben con guion).
 
 n8n guarda los cambios solo, mientras editás.
-
-**Si al guardar la credencial aparece "Couldn't connect with these settings - Bad Request":** la clave no tiene workspace. Creá otra eligiendo un workspace. O, con la misma clave, activá **Add Custom Header** en la credencial: **Header Name** `anthropic-workspace-id` y **Header Value** el ID de tu workspace (empieza con `wrkspc_`; está en [platform.claude.com/settings/workspaces](https://platform.claude.com/settings/workspaces)).
 
 > La clave es como la tarjeta de crédito de la API: va solo en la credencial, nunca en un nodo ni en el chat.
 
 ## Paso 3 · Probarlo
 
 1. Clic en **Execute workflow** (abajo, al centro). El flujo arranca por **Probar ahora**.
-2. Esperá. El nodo **Esperar 1 minuto** se repite hasta que **¿Terminó?** sale por "sí". **Es normal que tarde varios minutos, aunque sean solo 3 consultas:** el lote entra en una fila con los de todos los clientes (el límite es 24 horas; casi siempre, menos de 1). Para ver que avanza, abrí **Preguntar si terminó**: `processing_status: in_progress` y `errored: 0` significan que está todo bien y solo hay que esperar. Es el precio del cupón lote: por eso sirve para el reporte del lunes y no para el WhatsApp a Martina.
-3. Doble clic en **El reporte y la factura** > vista **Table**.
+2. Esperá. **Es normal que tarde varios minutos, aunque sean pocas consultas:** el lote entra en una fila con los de todos los clientes (el límite es 24 horas; casi siempre, menos de 1). Mientras tanto, **Esperar 1 minuto** se repite. Para ver que avanza, abrí **Preguntar si terminó**: `processing_status: in_progress` y `errored: 0` significan que está todo bien.
+3. Cuando termina, te llega un correo como este:
 
-Lo que tenés que ver:
+```
+Hola Paula, este es el reporte de las consultas del último mes.
 
-| consulta | servicio | prioridad | escritorio |
-|---|---|---:|---|
-| Martina Sosa | Landing page | 5 | Leyó el manual del escritorio (cupón caché) |
-| Julián Pereyra | Gestión de redes sociales | 1 | Leyó el manual del escritorio (cupón caché) |
-| Rodrigo Díaz | Campañas de anuncios | 3 | Leyó el manual del escritorio (cupón caché) |
-| TOTAL (3 consultas) | | | |
+Consultas analizadas: 2
 
-Las filas pueden venir en otro orden: el lote devuelve las respuestas mezcladas y el flujo las ubica por su etiqueta (`custom_id`). Si alguna dice "Guardó el manual otra vez", esa consulta no encontró el manual abierto: dentro de un lote el caché no está garantizado.
+QUÉ SERVICIOS PIDEN
+- Landing page: 1
+- Gestión de redes sociales: 1
 
-En la fila **TOTAL**, mirá la columna **en_palabras**. Dice algo así:
+CON QUÉ PRESUPUESTO
+- Mencionan un monto: 0 de 2 (en total, USD 0)
 
-> Con 3 consultas pagaste 66 de cada 100. Con 600 pagarías unos 18: poner el manual sobre el escritorio se paga una sola vez y se reparte entre todas.
+CON QUÉ URGENCIA
+- Quieren avanzar ya (prioridad 5): 1
+- Interés concreto, sin apuro (3 o 4): 0
+- Solo averiguan (1 o 2): 1
 
-Es el ticket de 100 de la clase. Con pocas consultas, poner el manual sobre el escritorio pesa mucho. Con las 600 del mes, ese costo se reparte y el ticket baja a unos 17 o 18: los dos cupones juntos.
+LAS MÁS URGENTES
+- Martina Sosa <martina.sosa@ejemplo.com>: Landing para lanzamiento del sábado, presupuesto aprobado
+
+LO QUE COSTÓ ESTE REPORTE (Claude Sonnet 5, con caché y lote)
+- Sin cupones: US$ 0,0125. Con los dos cupones: US$ 0,0112.
+- De cada 100, pagamos 90. Con 600 consultas pagaríamos unos 18.
+
+(Reporte automático)
+```
+
+La respuesta automática (el correo 3 de la Semana 5) no aparece: la frenó el filtro, igual que en la Semana 5. Los montos exactos van a variar un poco.
+
+## Cómo leer la factura
+
+Mirá las dos últimas líneas del correo: son el ticket de 100 de la clase.
+
+- **Con pocas consultas**, el ahorro se ve chico. Poner el manual sobre el escritorio se paga completo, y con 2 o 3 consultas pesa mucho en el total.
+- **Con las 600 del mes**, ese costo se reparte entre todas y el ticket baja a unos 17 o 18: los dos cupones juntos, como en la matriz de tu pre-entrega (de US$ 3,74 a US$ 0,65).
+
+Si querés ver consulta por consulta si encontró el manual abierto, abrí el nodo **Abrir la maleta**: en `factura`, `cache_read_input_tokens` son los tokens leídos del escritorio. Dentro de un lote, el caché no está garantizado; alguna consulta puede no encontrarlo.
 
 ## Paso 4 · Dejarlo andando solo
 
-1. Reemplazá **Las consultas de la semana** por un nodo **Gmail** > **Get many messages** con los correos del período, seguido de un **Edit Fields** que deje tres campos con estos nombres: `remitente`, `fecha` y `consulta` (el nodo **Armar el paquete** los usa así). Agregá al final un **Google Sheets** > **Append row** para el reporte de Paula.
-2. Revisá el día y la hora en **Todos los viernes 22:00**.
-3. Arriba a la derecha, **Publish**. Desde ese momento corre solo en el horario del Schedule Trigger.
+1. Revisá la fecha en **El día 1 de cada mes, 22:00**. Si tu caso es semanal, cambiá el Schedule Trigger a semanas y la búsqueda de Gmail a `newer_than:7d`.
+2. Arriba a la derecha, **Publish**. Desde ese momento corre solo.
 
-Lo que va a hacer cada viernes a las 22:00, sin que toques nada: poner el manual sobre el escritorio, mandar el paquete con los dos cupones, esperar, retirar y dejar el reporte listo para el lunes.
+Lo que hace cada mes, sin que toques nada: pone el manual sobre el escritorio, trae las consultas del mes, manda el paquete con los dos cupones, espera, retira las respuestas y le manda el reporte a Paula.

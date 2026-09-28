@@ -35,7 +35,7 @@ Las dos rebajas se pueden combinar, pero **no se suman**: se aplican una sobre l
 | 2 | [Caching y Batch](./02-caching-y-batch.md) | Cómo funciona cada descuento, con los precios oficiales y las cuentas hechas |
 | 3 | [La calculadora de costos](./03-calculadora-de-costos.md) | Una planilla que hace las cuentas por vos: la usás para tu pre-entrega |
 | 4 | [Tu Pre-entrega 6](./04-pre-entrega-6.md) | Las cuatro piezas del PDF, con el ejemplo de Agencia Norte resuelto |
-| 5 | [Opcional: los dos cupones en n8n](./05-bonus-n8n.md) | No se entrega. Qué configurar en tu automatización para pagar menos, con un flujo semanal listo para importar |
+| 5 | [Opcional: el reporte mensual para Paula en n8n](./05-bonus-n8n.md) | No se entrega. El problema de la clase como flujo real: Gmail, los dos cupones y el reporte por correo |
 
 Archivos de apoyo: [`calculadora-costos-claude.xlsx`](./calculadora-costos-claude.xlsx) y la carpeta [`n8n/`](./n8n) con el flujo opcional de la Guía 5.
 

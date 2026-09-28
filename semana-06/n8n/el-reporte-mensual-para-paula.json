@@ -1,14 +1,14 @@
 {
-  "name": "Agencia Norte - El reporte semanal con los dos cupones",
+  "name": "Agencia Norte - El reporte mensual para Paula",
   "nodes": [
     {
       "parameters": {
-        "content": "# El reporte semanal con los dos cupones\nUna ejecución por semana alcanza, **pero solo si el flujo está armado así**. Los nodos de Anthropic de n8n no aplican ningún cupón: los dos se configuran en los pedidos a la API.\n\n**Lo que configurás está en las notas naranjas:**\n1. Poner el manual sobre el escritorio\n2. Cupón caché: el señalador en cada consulta\n3. Cupón lote: mandar todo junto a `/v1/messages/batches`\n\nAntes de probar: credencial de Anthropic en los 4 nodos HTTP (Guía 5).",
-        "height": 640,
+        "content": "# El reporte mensual para Paula\nEl problema de la clase, resuelto: las consultas del mes, leídas por Claude gastando lo mínimo.\n\n**Gris:** piezas que ya conocés (Gmail, filtro, IF, abrir la maleta).\n**Naranja:** las piezas nuevas, los dos cupones. Ningún cupón es automático: los nodos de Anthropic de n8n no los aplican, por eso se usa HTTP Request.\n\nAntes de probar: credencial de Gmail en los 2 nodos Gmail y de Anthropic en los 4 HTTP (Guía 5).",
+        "height": 680,
         "width": 420,
         "color": 7
       },
-      "id": "803b8b62-2d7a-42fb-835e-c3ea6616efe9",
+      "id": "0598727c-366a-4e15-8f41-15835073573c",
       "name": "Nota -560 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -19,13 +19,13 @@
     },
     {
       "parameters": {},
-      "id": "9606b8d6-744c-485e-8df6-3f1419aca3f8",
+      "id": "93ec88e0-3419-4429-897f-4ef716a81200",
       "name": "Probar ahora",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
         -420,
-        340
+        380
       ]
     },
     {
@@ -33,32 +33,30 @@
         "rule": {
           "interval": [
             {
-              "field": "weeks",
-              "triggerAtDay": [
-                5
-              ],
+              "field": "months",
+              "triggerAtDayOfMonth": 1,
               "triggerAtHour": 22
             }
           ]
         }
       },
-      "id": "70119126-b4ed-459c-a79a-2f05880dc36a",
-      "name": "Todos los viernes 22:00",
+      "id": "dd8f3469-9ed4-4824-bef1-03233893847f",
+      "name": "El día 1 de cada mes, 22:00",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
         -420,
-        520
+        560
       ]
     },
     {
       "parameters": {
-        "content": "## 1. Preparar\nEl manual: la parte fija de la Guía 1, igual en todas las consultas.\n\n**Poner el manual sobre el escritorio:** una llamada chica (`max_tokens: 0`) con el señalador. Claude lo lee y lo deja guardado 1 hora, sin responder nada. Así las consultas del lote lo encuentran abierto.",
-        "height": 640,
+        "content": "## 1. El manual sobre el escritorio\n**El manual:** la parte fija de la Guía 1 (rol, catálogo, reglas, ejemplos y formato).\n\n**Poner el manual sobre el escritorio:** una llamada chica (`max_tokens: 0`) con el señalador. Claude lo lee y lo deja guardado 1 hora, sin responder. Así las consultas del lote lo encuentran abierto.",
+        "height": 680,
         "width": 440,
         "color": 2
       },
-      "id": "01d7a1ca-d00f-42ed-b099-69885494be97",
+      "id": "26fc7d1a-0335-4241-b95e-749130fcebb8",
       "name": "Nota -100 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -72,7 +70,7 @@
         "assignments": {
           "assignments": [
             {
-              "id": "5025c599-c0d6-4b6b-88f1-85d96e1bb3e8",
+              "id": "003402f0-85f9-47e3-8edf-a1b7310e3d54",
               "name": "parte_fija",
               "value": "Actuá como analista comercial senior de Agencia Norte, una agencia chica de diseño web y marketing digital de Buenos Aires.\n\nTu objetivo: leer una consulta que un posible cliente envió por correo y clasificarla para el reporte mensual que revisa la directora. El reporte responde tres preguntas: qué servicios pide la gente, con qué presupuesto y con qué urgencia.\n\nCATÁLOGO DE SERVICIOS DE AGENCIA NORTE\n- Landing page: desde USD 400. Plazo: 1 semana. Una sola página para una campaña, un lanzamiento o un formulario.\n- Sitio web institucional: desde USD 1.200. Plazo: 4 semanas. Varias secciones: inicio, servicios, equipo, contacto.\n- Tienda online: desde USD 2.500. Plazo: 6 semanas. Catálogo de productos, carrito y pagos.\n- Gestión de redes sociales: USD 300 por mes. Publicaciones, diseño de piezas y respuesta de mensajes.\n- Campañas de anuncios: USD 250 por mes más la inversión en pauta. Anuncios en redes y buscadores.\n\nINFORMACIÓN GENERAL DE LA AGENCIA\n- Atendemos de lunes a viernes, de 9 a 18 horas (hora de Argentina).\n- Trabajamos con clientes de todo el país, de forma remota.\n- Forma de pago: 50% al comenzar y 50% al entregar, por transferencia bancaria.\n- Todos los proyectos web incluyen dos rondas de cambios y un mes de soporte.\n- No hacemos aplicaciones móviles, sistemas a medida ni videojuegos. Si piden algo de esto, el servicio es \"Otro\".\n- Los precios del catálogo son de referencia: el presupuesto final depende del alcance.\n\nCÓMO SUELEN ESCRIBIR LOS CLIENTES\n- \"Página\", \"web\" o \"sitio\" puede ser landing o sitio institucional: si habla de una sola página o de una campaña, es Landing page; si menciona varias secciones, es Sitio web institucional.\n- \"Vender por internet\", \"carrito\", \"e-commerce\" o \"catálogo con pagos\" es Tienda online.\n- \"Instagram\", \"posteos\" o \"community manager\" es Gestión de redes sociales.\n- \"Publicidad\", \"anuncios\", \"Google Ads\" o \"pauta\" es Campañas de anuncios.\n- Si el monto está en pesos, no lo conviertas: usá null en \"presupuesto_usd\" y mencioná el monto en el resumen.\n\nREGLAS DE CLASIFICACIÓN\n1. \"servicio\": elegí UNO del catálogo. Si pide dos, elegí el principal (el que más presupuesto implica). Si no encaja en ninguno, usá \"Otro\".\n2. \"presupuesto_usd\": solo si el cliente menciona un monto. Convertí a número entero en dólares (sin símbolos ni puntos). Si no menciona monto, usá null. No lo estimes vos.\n3. \"prioridad\": un número entero del 1 al 5.\n   5 = quiere avanzar ya o tiene una fecha límite en los próximos 3 días.\n   3 = interés concreto, sin urgencia.\n   1 = solo está averiguando, sin fecha ni presupuesto.\n4. \"resumen\": qué necesita, en 10 palabras como máximo.\n5. Si la consulta no es de un posible cliente (spam, proveedores, respuestas automáticas), usá servicio \"Otro\", prioridad 1 y resumen \"No es una consulta comercial\".\n\nEJEMPLOS RESUELTOS\nConsulta: \"Necesitamos una landing para el lanzamiento del sábado, tengo presupuesto aprobado. ¿Me llaman hoy?\"\nRespuesta: {\"razonamiento\": \"Pide una sola página para un lanzamiento con fecha en 3 días.\", \"servicio\": \"Landing page\", \"presupuesto_usd\": null, \"prioridad\": 5, \"resumen\": \"Landing para lanzamiento del sábado, presupuesto aprobado\"}\n\nConsulta: \"¿Cuánto sale el manejo mensual de redes? Estoy armando el presupuesto del año que viene.\"\nRespuesta: {\"razonamiento\": \"Pregunta precio de redes para el año próximo, sin urgencia ni monto.\", \"servicio\": \"Gestión de redes sociales\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"Averigua precio de redes para el año próximo\"}\n\nConsulta: \"Queremos vender online nuestros productos. Tenemos unos 3000 dólares. ¿Qué plazos manejan?\"\nRespuesta: {\"razonamiento\": \"Quiere vender online con monto mencionado de 3000 dólares, sin fecha.\", \"servicio\": \"Tienda online\", \"presupuesto_usd\": 3000, \"prioridad\": 3, \"resumen\": \"Tienda online con presupuesto de 3000 dólares\"}\n\nConsulta: \"Somos un estudio contable y queremos una web con quiénes somos, servicios y contacto. Nos gustaría tenerla para fin de mes.\"\nRespuesta: {\"razonamiento\": \"Menciona varias secciones y una fecha a fin de mes, sin monto.\", \"servicio\": \"Sitio web institucional\", \"presupuesto_usd\": null, \"prioridad\": 3, \"resumen\": \"Web institucional para estudio contable, a fin de mes\"}\n\nConsulta: \"Hola, somos proveedores de hosting y queremos ofrecerles un plan especial para agencias.\"\nRespuesta: {\"razonamiento\": \"Es un proveedor ofreciendo un servicio, no un posible cliente.\", \"servicio\": \"Otro\", \"presupuesto_usd\": null, \"prioridad\": 1, \"resumen\": \"No es una consulta comercial\"}\n\nCÓMO RESPONDER\nPensá paso a paso antes de dar la conclusión: primero identificá qué pide el cliente, después buscá el servicio en el catálogo, después revisá si menciona monto y fecha, y recién al final decidí la prioridad.\nEscribí ese razonamiento en una o dos oraciones dentro del campo \"razonamiento\", que va primero.\nDevolvé exclusivamente un objeto JSON con estas claves, en este orden: \"razonamiento\", \"servicio\", \"presupuesto_usd\", \"prioridad\", \"resumen\".\nNo agregues texto fuera del JSON. No inventes datos que no estén en la consulta.",
               "type": "string"
@@ -81,13 +79,13 @@
         },
         "options": {}
       },
-      "id": "5eae22a9-9113-457c-a3d9-4c7e0c091e0e",
+      "id": "cd44f85d-6d50-4fa3-910b-0b056c7b6d22",
       "name": "El manual (parte fija)",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
         -40,
-        420
+        460
       ]
     },
     {
@@ -110,23 +108,23 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-5',\n  max_tokens: 0,\n  thinking: { type: 'disabled' },\n  system: [{\n    type: 'text',\n    text: $json.parte_fija,\n    cache_control: { type: 'ephemeral', ttl: '1h' }\n  }],\n  messages: [{ role: 'user', content: 'warmup' }]\n}) }}"
       },
-      "id": "f4a642cd-f637-43b3-aeca-f1f29db9b5ca",
+      "id": "40061958-511c-401f-8485-301a1869b206",
       "name": "Poner el manual sobre el escritorio",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         160,
-        420
+        460
       ]
     },
     {
       "parameters": {
-        "content": "## 2. Los dos cupones\n**Cupón caché:** cada consulta lleva el mismo manual con el mismo señalador (`cache_control`, 1 hora).\n\n**Cupón lote:** todas las consultas van en un solo paquete a `/v1/messages/batches` en lugar de `/v1/messages`. Esa dirección es la mitad de precio.\n\nEn tu flujo real, las consultas salen de Gmail > Get many messages.",
-        "height": 640,
-        "width": 640,
-        "color": 2
+        "content": "## 2. Las consultas del mes\nComo en la Semana 5: Gmail trae los correos de la etiqueta **Agencia Norte** de los últimos 30 días, y el filtro deja afuera las respuestas automáticas.\n\nPara probar, sirven los correos de prueba de la Semana 5.",
+        "height": 680,
+        "width": 440,
+        "color": 5
       },
-      "id": "95768c46-6d5e-4115-9044-b6e701551b45",
+      "id": "88c6231f-1bd3-45f2-8d3a-f230dc623416",
       "name": "Nota 380 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -137,28 +135,101 @@
     },
     {
       "parameters": {
-        "jsCode": "// La parte variable: los correos de la semana.\n// Acá hay 3 de muestra. En tu flujo real, este nodo se reemplaza por\n// Gmail > Get many messages (los correos que llegaron en la semana).\nreturn [\n  { json: {\n    quien: 'Martina Sosa',\n    remitente: 'Martina Sosa <martina.sosa@ejemplo.com>',\n    fecha: 'viernes 25/09/2026 18:05',\n    consulta: 'Hola, ¿cómo están?\\n\\nSoy Martina Sosa, de Panadería Sosa. Este sábado lanzamos nuestra línea de tortas por encargo y necesitamos una landing page con formulario de pedidos. Ya tengo el presupuesto aprobado y quiero arrancar hoy mismo.\\n\\n¿Pueden llamarme hoy? Mi WhatsApp es +54 9 11 2233-4455.\\n\\nGracias,\\nMartina'\n  } },\n  { json: {\n    quien: 'Julián Pereyra',\n    remitente: 'Julián Pereyra <julian.pereyra@ejemplo.com>',\n    fecha: 'lunes 21/09/2026 15:40',\n    consulta: 'Hola, buenas tardes.\\n\\nEstoy averiguando cuánto sale el manejo mensual de redes sociales para una ferretería. No es para ahora, estamos armando el presupuesto del año que viene.\\n\\nSaludos,\\nJulián Pereyra'\n  } },\n  { json: {\n    quien: 'Rodrigo Díaz',\n    remitente: 'Rodrigo Díaz <rodrigo.diaz@ejemplo.com>',\n    fecha: 'miércoles 23/09/2026 10:15',\n    consulta: 'Hola. Tenemos una inmobiliaria y queremos hacer anuncios en Google para vender más departamentos este trimestre. Podríamos invertir unos 500 dólares por mes. ¿Cómo trabajan?\\n\\nRodrigo Díaz'\n  } }\n];"
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "label:agencia-norte newer_than:30d",
+          "readStatus": "both"
+        },
+        "options": {}
       },
-      "id": "e3422fbc-5295-4bd4-852b-9e883ce2944a",
-      "name": "Las consultas de la semana",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "id": "20cc0eb7-0cbf-4968-b4a2-6ae052a90ce0",
+      "name": "Las consultas del mes",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
       "position": [
         440,
-        420
+        460
       ]
     },
     {
       "parameters": {
-        "jsCode": "// CUPÓN CACHÉ: cada consulta lleva el MISMO manual con el MISMO señalador.\n// Es exactamente lo que ya está sobre el escritorio (nodo anterior),\n// así Claude lo encuentra abierto y lo cobra 10 veces más barato.\nconst manual = $('El manual (parte fija)').first().json.parte_fija;\n\nconst requests = $input.all().map((item, i) => ({\n  // La etiqueta de cada consulta: las respuestas vuelven mezcladas.\n  custom_id: 'consulta-' + (i + 1),\n  params: {\n    model: 'claude-sonnet-5',\n    max_tokens: 1024,\n    thinking: { type: 'disabled' },\n    // El manual + el señalador (cache_control). 1 hora, porque el lote puede tardar.\n    system: [{ type: 'text', text: manual, cache_control: { type: 'ephemeral', ttl: '1h' } }],\n    // Después del señalador, lo que cambia: el correo de esta consulta.\n    messages: [{\n      role: 'user',\n      content: 'Remitente: ' + item.json.remitente + '\\nFecha: ' + item.json.fecha + '\\nConsulta:\\n' + item.json.consulta\n    }]\n  }\n}));\n\n// Todas las consultas van en UN solo paquete.\nreturn [{ json: { paquete: { requests } } }];"
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "ed09498f-a059-4654-842c-23bb7c52bdaf",
+              "leftValue": "={{ $json.from.text }}",
+              "rightValue": "noreply",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "f0aee4cc-0048-4f24-be54-ab5822fbc1ab",
+              "leftValue": "={{ $json.from.text }}",
+              "rightValue": "no-reply",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "4c4bdb96-a863-4a04-98a7-13064d7dde60",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "automática",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "id": "76b7901a-eadd-4efd-a342-f21b933a33a2",
+      "id": "b82e27e4-c4e1-4db0-b289-7dc761b94e74",
+      "name": "No es respuesta automática",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        640,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3. Los dos cupones\n**Cupón caché:** cada consulta lleva el mismo manual con el mismo señalador (`cache_control`, 1 hora).\n\n**Cupón lote:** todas las consultas van en un solo paquete a `/v1/messages/batches` en lugar de `/v1/messages`. Esa dirección cobra la mitad.",
+        "height": 680,
+        "width": 440,
+        "color": 2
+      },
+      "id": "751d981c-bb2a-4500-aa30-54de347077ae",
+      "name": "Nota 860 -20",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        860,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// CUPÓN CACHÉ: cada consulta lleva el MISMO manual con el MISMO señalador.\n// Es lo que ya quedó sobre el escritorio, así Claude lo encuentra abierto\n// y lo cobra 10 veces más barato.\nconst manual = $('El manual (parte fija)').first().json.parte_fija;\n\n// Las consultas que pasaron el filtro. Cada correo de Gmail trae\n// el remitente (from.text), la fecha (date) y el texto (text).\nconst requests = $input.all().map((correo, i) => ({\n  // La etiqueta de cada consulta: las respuestas del lote vuelven mezcladas.\n  custom_id: 'consulta-' + (i + 1),\n  params: {\n    model: 'claude-sonnet-5',\n    max_tokens: 1024,\n    thinking: { type: 'disabled' },\n    // El manual + el señalador (cache_control). 1 hora, porque el lote puede tardar.\n    system: [{ type: 'text', text: manual, cache_control: { type: 'ephemeral', ttl: '1h' } }],\n    // Después del señalador, lo que cambia: la plantilla de la Guía 1 con este correo.\n    messages: [{\n      role: 'user',\n      content: 'Remitente: ' + correo.json.from.text + '\\nFecha: ' + correo.json.date + '\\nConsulta:\\n' + correo.json.text\n    }]\n  }\n}));\n\n// Todas las consultas del mes van en UN solo paquete.\nreturn [{ json: { paquete: { requests } } }];"
+      },
+      "id": "676174b5-5fa7-44ed-a42e-c093f3dd730a",
       "name": "Armar el paquete (cupón caché)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        640,
-        420
+        920,
+        460
       ]
     },
     {
@@ -181,28 +252,28 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.paquete) }}"
       },
-      "id": "28e6e1d0-08b2-4586-b2e3-4bab8e65c224",
+      "id": "dd05b83b-1011-4d96-b0b9-121249fab86b",
       "name": "Enviar el lote (cupón lote)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        840,
-        420
+        1120,
+        460
       ]
     },
     {
       "parameters": {
-        "content": "## 3. Esperar y retirar\nEl lote no responde en el momento: el flujo espera 1 minuto y pregunta. Si todavía no terminó, vuelve a esperar. Cuando termina, descarga las respuestas.\n\nNadie espera en pantalla: por eso el lote sirve para el reporte y no para el WhatsApp a Martina.",
-        "height": 640,
+        "content": "## 4. Esperar y retirar\nEl lote no responde en el momento: el flujo espera 1 minuto y pregunta. Si no terminó, vuelve a esperar. Puede tardar varios minutos (el límite es 24 horas).\n\nNadie espera en pantalla: Paula lee el reporte el lunes.",
+        "height": 680,
         "width": 640,
-        "color": 5
+        "color": 2
       },
-      "id": "aa85f7d3-b195-4be0-a63d-95c1194a8ef4",
-      "name": "Nota 1060 -20",
+      "id": "ee66c50a-3d68-4d4b-b093-4be0138791aa",
+      "name": "Nota 1340 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1060,
+        1340,
         -20
       ]
     },
@@ -212,13 +283,13 @@
         "amount": 1,
         "unit": "minutes"
       },
-      "id": "5cdeec2c-b09b-4297-a805-2f22fda45865",
+      "id": "3fda3ea7-ab51-479f-8c83-52ce0915b829",
       "name": "Esperar 1 minuto",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1100,
-        420
+        1380,
+        460
       ]
     },
     {
@@ -238,13 +309,13 @@
         },
         "options": {}
       },
-      "id": "850bf375-687a-460e-81bc-ad0878979272",
+      "id": "42b257a7-961e-4790-8189-ec683ff681c8",
       "name": "Preguntar si terminó",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1300,
-        420
+        1580,
+        460
       ]
     },
     {
@@ -253,11 +324,11 @@
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "strict"
+            "typeValidation": "loose"
           },
           "conditions": [
             {
-              "id": "9121355f-ca5f-418d-b4c4-092b43a1fa62",
+              "id": "56f756ac-ddd0-4730-90aa-058bf4d82e76",
               "leftValue": "={{ $json.processing_status }}",
               "rightValue": "ended",
               "operator": {
@@ -270,28 +341,28 @@
         },
         "options": {}
       },
-      "id": "a7ed436e-d66f-46c8-b115-669e10dc81a8",
+      "id": "618da738-6d26-4b23-a9de-8191a0e99df7",
       "name": "¿Terminó?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1500,
-        420
+        1780,
+        460
       ]
     },
     {
       "parameters": {
-        "content": "## 4. El reporte y la factura\nUna fila por consulta (servicio, presupuesto, prioridad y si usó el escritorio) y una fila TOTAL: de cada 100 que costaría sin cupones, cuánto pagaste.\n\nEn tu flujo real, después va Google Sheets > Append row para el reporte de Paula.",
-        "height": 640,
-        "width": 460,
-        "color": 4
+        "content": "## 5. El reporte para Paula\n**Abrir la maleta:** como el Parse JSON de la Semana 5, convierte cada respuesta en campos.\n\n**Armar el reporte:** qué servicios, con qué presupuesto y con qué urgencia, más lo que costó.\n\n**Enviar:** por Gmail. Cambiá el destinatario por tu correo.",
+        "height": 680,
+        "width": 640,
+        "color": 5
       },
-      "id": "15dc5d7f-ff78-4f03-ae21-9f0371b6abd4",
-      "name": "Nota 1740 -20",
+      "id": "d6a2556c-d06d-4e60-970c-4606854630f4",
+      "name": "Nota 2020 -20",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1740,
+        2020,
         -20
       ]
     },
@@ -318,26 +389,58 @@
           }
         }
       },
-      "id": "efb494f8-6002-4ef1-8337-8fd04954f4a4",
+      "id": "89b2cbed-26e9-4cbc-bc1c-5424490cdfac",
       "name": "Retirar las respuestas",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1800,
-        340
+        2060,
+        380
       ]
     },
     {
       "parameters": {
-        "jsCode": "// Las respuestas llegan en formato JSONL: una línea por consulta.\n// Con el custom_id sabemos de quién es cada una.\nconst consultas = $('Las consultas de la semana').all();\nconst lineas = ($input.first().json.data || '').split('\\n').filter(l => l.trim());\n\n// Precios de Claude Sonnet 5 por millón de tokens (verificados el 28/09/2026).\n// Sin cupones: entrada 2, salida 10.\n// En lote (la mitad): entrada 1, salida 5, lectura del escritorio 0,10, guardar 1 hora 2.\nlet sinCupones = 0;\nlet conCupones = 0;\n\nconst filas = lineas.map(linea => {\n  const r = JSON.parse(linea);\n  const n = Number(r.custom_id.split('-')[1]) - 1;\n  const mensaje = (r.result && r.result.message) || {};\n  const u = mensaje.usage || {};\n  const entrada = u.input_tokens || 0;\n  const guardados = u.cache_creation_input_tokens || 0;\n  const leidos = u.cache_read_input_tokens || 0;\n  const salida = u.output_tokens || 0;\n\n  sinCupones += ((entrada + guardados + leidos) * 2 + salida * 10) / 1e6;\n  conCupones += (entrada * 1 + guardados * 2 + leidos * 0.1 + salida * 5) / 1e6;\n\n  // La respuesta es el JSON de la Guía 1 escrito como texto: lo abrimos.\n  let datos = {};\n  try {\n    const texto = (mensaje.content || []).map(b => b.text || '').join('');\n    datos = JSON.parse(texto.replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = {};\n  }\n\n  let escritorio = 'No usó el escritorio';\n  if (guardados > 0) escritorio = 'Guardó el manual otra vez (sin cupón caché)';\n  if (leidos > 0) escritorio = 'Leyó el manual del escritorio (cupón caché)';\n\n  return { json: {\n    consulta: consultas[n] ? consultas[n].json.quien : r.custom_id,\n    servicio: datos.servicio,\n    presupuesto_usd: datos.presupuesto_usd,\n    prioridad: datos.prioridad,\n    escritorio\n  } };\n});\n\n// Lo que costó poner el manual sobre el escritorio (precio normal, guardar 1 hora = 4).\nconst u0 = $('Poner el manual sobre el escritorio').first().json.usage || {};\nconst escritorioUsd = ((u0.input_tokens || 0) * 2 + (u0.cache_creation_input_tokens || 0) * 4) / 1e6;\nconCupones += escritorioUsd;\n\n// El ticket de 100: de cada 100 que costaría sin cupones, cuánto pagamos.\nconst cantidad = filas.length;\nconst deCada100 = Math.round(conCupones / sinCupones * 100);\n// Lo mismo con 600 consultas: el manual se pone sobre el escritorio una sola vez\n// y ese costo se reparte entre todas.\nconst con600 = Math.round((escritorioUsd + (conCupones - escritorioUsd) / cantidad * 600) / (sinCupones / cantidad * 600) * 100);\n\nfilas.push({ json: {\n  consulta: 'TOTAL (' + cantidad + ' consultas)',\n  costo_sin_cupones_usd: Number(sinCupones.toFixed(4)),\n  costo_con_cupones_usd: Number(conCupones.toFixed(4)),\n  de_cada_100_pagaste: deCada100,\n  con_600_consultas_pagarias: con600,\n  en_palabras: 'Con ' + cantidad + ' consultas pagaste ' + deCada100 + ' de cada 100. ' +\n    'Con 600 pagarías unos ' + con600 + ': poner el manual sobre el escritorio se paga una sola vez y se reparte entre todas.'\n} });\n\nreturn filas;"
+        "jsCode": "// Las respuestas llegan en formato JSONL: una línea por consulta.\n// Como en la Semana 5 (Parse JSON), cada respuesta es una maleta cerrada:\n// un texto con el JSON adentro. Acá la abrimos para usar sus campos.\nconst correos = $('No es respuesta automática').all();\nconst lineas = ($input.first().json.data || '').split('\\n').filter(l => l.trim());\n\nreturn lineas.map(linea => {\n  const r = JSON.parse(linea);\n  const n = Number(r.custom_id.split('-')[1]) - 1;   // consulta-1 es el correo 0\n  const mensaje = (r.result && r.result.message) || {};\n\n  let datos = {};\n  try {\n    const texto = (mensaje.content || []).map(b => b.text || '').join('');\n    datos = JSON.parse(texto.replace(/```json|```/g, '').trim());\n  } catch (e) {\n    datos = { servicio: 'Sin respuesta', resumen: 'Revisar a mano: ' + r.custom_id };\n  }\n\n  return { json: {\n    quien: correos[n] ? correos[n].json.from.text : r.custom_id,\n    servicio: datos.servicio,\n    presupuesto_usd: datos.presupuesto_usd,\n    prioridad: datos.prioridad,\n    resumen: datos.resumen,\n    factura: mensaje.usage || {}\n  } };\n});"
       },
-      "id": "3cce8cb8-d654-42c1-9fdf-7ded68e55420",
-      "name": "El reporte y la factura",
+      "id": "c99769a5-5409-4bef-b862-308d695e395c",
+      "name": "Abrir la maleta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2000,
-        340
+        2260,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma el correo para Paula con las tres preguntas del reporte:\n// qué servicios piden, con qué presupuesto y con qué urgencia.\nconst consultas = $input.all().map(i => i.json);\nconst cantidad = consultas.length;\n\n// 1. Qué servicios piden\nconst porServicio = {};\nconsultas.forEach(c => { porServicio[c.servicio] = (porServicio[c.servicio] || 0) + 1; });\nconst servicios = Object.entries(porServicio).sort((a, b) => b[1] - a[1])\n  .map(([s, n]) => '- ' + s + ': ' + n).join('\\n');\n\n// 2. Con qué presupuesto (solo las que mencionan un monto)\nconst conMonto = consultas.filter(c => typeof c.presupuesto_usd === 'number');\nconst totalMonto = conMonto.reduce((t, c) => t + c.presupuesto_usd, 0);\n\n// 3. Con qué urgencia\nconst urgentes = consultas.filter(c => c.prioridad === 5);\nconst medias = consultas.filter(c => c.prioridad === 3 || c.prioridad === 4);\nconst bajas = consultas.filter(c => c.prioridad === 1 || c.prioridad === 2);\n\n// La factura: cuánto costó el reporte con los dos cupones y cuánto habría costado sin ellos.\n// Precios de Claude Sonnet 5 por millón de tokens (verificados el 28/09/2026).\n// Sin cupones: entrada 2, salida 10. En lote: entrada 1, salida 5,\n// lectura del escritorio 0,10, guardar 1 hora 2. Poner el manual sobre el escritorio: 4.\nlet sin = 0, con = 0;\nconsultas.forEach(c => {\n  const u = c.factura;\n  const entrada = u.input_tokens || 0, guardados = u.cache_creation_input_tokens || 0;\n  const leidos = u.cache_read_input_tokens || 0, salida = u.output_tokens || 0;\n  sin += ((entrada + guardados + leidos) * 2 + salida * 10) / 1e6;\n  con += (entrada * 1 + guardados * 2 + leidos * 0.1 + salida * 5) / 1e6;\n});\nconst u0 = $('Poner el manual sobre el escritorio').first().json.usage || {};\nconst escritorio = ((u0.input_tokens || 0) * 2 + (u0.cache_creation_input_tokens || 0) * 4) / 1e6;\ncon += escritorio;\nconst deCada100 = Math.round(con / sin * 100);\n// Con 600 consultas, el manual se pone sobre el escritorio una sola vez y se reparte entre todas.\nconst con600 = Math.round((escritorio + (con - escritorio) / cantidad * 600) / (sin / cantidad * 600) * 100);\nconst usd = n => 'US$ ' + n.toFixed(4).replace('.', ',');\n\nconst mensaje = [\n  'Hola Paula, este es el reporte de las consultas del último mes.',\n  '',\n  'Consultas analizadas: ' + cantidad,\n  '',\n  'QUÉ SERVICIOS PIDEN',\n  servicios,\n  '',\n  'CON QUÉ PRESUPUESTO',\n  '- Mencionan un monto: ' + conMonto.length + ' de ' + cantidad + ' (en total, USD ' + totalMonto + ')',\n  '',\n  'CON QUÉ URGENCIA',\n  '- Quieren avanzar ya (prioridad 5): ' + urgentes.length,\n  '- Interés concreto, sin apuro (3 o 4): ' + medias.length,\n  '- Solo averiguan (1 o 2): ' + bajas.length,\n  '',\n  'LAS MÁS URGENTES',\n  urgentes.map(c => '- ' + c.quien + ': ' + c.resumen).join('\\n') || '- Ninguna',\n  '',\n  'LO QUE COSTÓ ESTE REPORTE (Claude Sonnet 5, con caché y lote)',\n  '- Sin cupones: ' + usd(sin) + '. Con los dos cupones: ' + usd(con) + '.',\n  '- De cada 100, pagamos ' + deCada100 + '. Con 600 consultas pagaríamos unos ' + con600 + '.',\n  '',\n  '(Reporte automático)'\n].join('\\n');\n\nreturn [{ json: { asunto: 'Reporte mensual de consultas - Agencia Norte', mensaje } }];"
+      },
+      "id": "bcce49bf-5037-4e5c-b780-d08dcb11b2f8",
+      "name": "Armar el reporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "tu.correo@ejemplo.com",
+        "subject": "={{ $json.asunto }}",
+        "emailType": "text",
+        "message": "={{ $json.mensaje }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4292ab6a-202c-4b91-bb99-805c25d1f3cd",
+      "name": "Enviar el reporte a Paula",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2460,
+        580
       ]
     }
   ],
@@ -353,7 +456,7 @@
         ]
       ]
     },
-    "Todos los viernes 22:00": {
+    "El día 1 de cada mes, 22:00": {
       "main": [
         [
           {
@@ -379,14 +482,25 @@
       "main": [
         [
           {
-            "node": "Las consultas de la semana",
+            "node": "Las consultas del mes",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Las consultas de la semana": {
+    "Las consultas del mes": {
+      "main": [
+        [
+          {
+            "node": "No es respuesta automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No es respuesta automática": {
       "main": [
         [
           {
@@ -394,7 +508,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "Armar el paquete (cupón caché)": {
@@ -463,7 +578,29 @@
       "main": [
         [
           {
-            "node": "El reporte y la factura",
+            "node": "Abrir la maleta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Abrir la maleta": {
+      "main": [
+        [
+          {
+            "node": "Armar el reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el reporte": {
+      "main": [
+        [
+          {
+            "node": "Enviar el reporte a Paula",
             "type": "main",
             "index": 0
           }
